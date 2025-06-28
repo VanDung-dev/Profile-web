@@ -89,7 +89,6 @@ Dự án này được phát hành dưới **giấy phép tùy chỉnh cho hồ 
 - **Email**: [dungnguyen2661@gmail.com](mailto:dungnguyen2661@gmail.com)
 - **GitHub**: [VanDung-dev](https://github.com/VanDung-dev)
 - **LinkedIn**: [dung-nguyen](https://www.linkedin.com/in/dung-nguyen-211bab348/)
-- **Twitter**: [@VanDung_dev](#)
 
 ---
 
