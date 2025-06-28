@@ -1,42 +1,47 @@
 document.addEventListener('DOMContentLoaded', function() {
   // ======================== DOM REFERENCES ========================
-  const terminalContainer = document.querySelector('.terminal-container');
-  const terminalIcon = document.getElementById('terminal-icon');
+  const terminalContainer = document.querySelector('.container');
+  const appIcon = document.getElementById('app-icon');
   const redDot = document.getElementById('red-dot');
-  const terminalContent = document.querySelector('.terminal-content');
+  const content = document.querySelector('.content');
   const tabsContainer = document.querySelector('.tabs-container');
-  const terminalTitle = document.querySelector('.terminal-title');
-  const dockTerminalIcon = document.getElementById('dock-terminal');
-  const dockRedDot = document.getElementById('dock-red-dot');
+  const ContainerTitle = document.querySelector('.container-title');
+  const dockAppIcon = document.getElementById('dock-terminal');
+  const dockRedDot = document.getElementById('dock-terminal-red-dot');
   const dock = document.querySelector('.dock');
+  const themeSelector = document.getElementById('theme-selector');
+  const dockGithub = document.getElementById('dock-github');
   
   // ======================== APP STATE ========================
   const state = {
     isMaximized: false,
     isMinimized: true,
     isClosed: false,
-    originalContent: terminalContent.innerHTML,
-    minimizedContent: terminalContent.innerHTML,
-    minimizedTitle: terminalTitle.textContent,
+    originalContent: content.innerHTML,
+    minimizedContent: content.innerHTML,
+    minimizedTitle: ContainerTitle.textContent,
     currentLanguage: localStorage.getItem('language') || 'vi'
   };
 
   // ======================== INITIALIZATION ========================
   function initialize() {
-    terminalTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
-    setLanguage(state.currentLanguage);
-
+    ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
+    initTheme();
+    
+    const savedLang = localStorage.getItem('language') || 'vi';
+    setLanguage(savedLang);
+    
     terminalContainer.style.display = 'block';
     terminalContainer.classList.add('restore');
-
-    terminalIcon.style.display = 'none';
+    
+    appIcon.style.display = 'none';
     redDot.style.display = 'none';
     redDot.classList.remove('visible');
     dockRedDot.style.display = 'none';
     dockRedDot.classList.remove('visible');
-
+    
     dock.classList.add('hidden');
-
+    
     state.isMinimized = false;
     state.isClosed = false;
     
@@ -59,14 +64,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.minimize')?.addEventListener('click', minimizeTerminal);
     document.querySelector('.maximize')?.addEventListener('click', toggleMaximize);
     document.querySelector('.close')?.addEventListener('click', closeTerminal);
+    
+    appIcon.addEventListener('click', handleAppIconClick);
 
-    terminalIcon.addEventListener('click', handleAppIconClick);
-    dockTerminalIcon?.addEventListener('click', handleAppIconClick);
+    dockAppIcon?.addEventListener('click', handleAppIconClick);
 
     document.querySelector('.language-toggle')?.addEventListener('click', toggleLanguage);
 
     document.querySelectorAll('.avatar img').forEach(img => {
       img.addEventListener('error', handleAvatarError);
+    });
+
+    themeSelector?.addEventListener('click', toggleThemePopup);
+
+    dockGithub?.addEventListener('click', () => {
+      window.open('https://github.com/VanDung-dev', '_blank');
     });
   }
 
@@ -84,15 +96,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // ======================== TERMINAL CONTROLS ========================
   function minimizeTerminal() {
-    state.minimizedContent = terminalContent.innerHTML;
-    state.minimizedTitle = terminalTitle.textContent;
+    state.minimizedContent = content.innerHTML;
+    state.minimizedTitle = ContainerTitle.textContent;
     
     terminalContainer.classList.add('minimized');
     setTimeout(() => {
       terminalContainer.style.display = 'none';
       terminalContainer.classList.remove('minimized');
       
-      terminalIcon.style.display = 'flex';
+      appIcon.style.display = 'flex';
       redDot.style.display = 'block';
       redDot.classList.add('visible');
       dockRedDot.style.display = 'block';
@@ -120,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
         left: '0',
         zIndex: '1000'
       });
-      document.body.style.backgroundImage = 'none';
     } else {
       terminalContainer.classList.remove('maximized');
       Object.assign(terminalContainer.style, {
@@ -133,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
         left: 'auto',
         zIndex: '1'
       });
-      document.body.style.backgroundImage = 'radial-gradient(circle at 10% 20%, rgb(82, 16, 91, 0.8) 0%, rgba(0, 0, 0, 0.5) 66%)';
     }
     state.isMaximized = !state.isMaximized;
   }
@@ -149,11 +159,11 @@ document.addEventListener('DOMContentLoaded', function() {
       dockRedDot.style.display = 'none';
       dockRedDot.classList.remove('visible');
       
-      terminalContent.innerHTML = createTerminalInputHTML();
+      content.innerHTML = createTerminalInputHTML();
       tabsContainer.style.display = 'none';
-      terminalTitle.textContent = 'VanDung-dev@manjaro';
+      ContainerTitle.textContent = 'VanDung-dev@manjaro';
       
-      terminalIcon.style.display = 'flex';
+      appIcon.style.display = 'flex';
 
       dock.classList.remove('hidden');
 
@@ -170,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function openTerminal() {
-    terminalIcon.style.display = 'none';
+    appIcon.style.display = 'none';
     terminalContainer.style.display = 'block';
     terminalContainer.classList.add('restore');
 
@@ -178,11 +188,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     setTimeout(() => {
       terminalContainer.classList.remove('restore');
-      terminalContent.innerHTML = createTerminalInputHTML();
+      content.innerHTML = createTerminalInputHTML();
       tabsContainer.style.display = 'none';
-      terminalTitle.textContent = 'VanDung-dev@manjaro';
+      ContainerTitle.textContent = 'VanDung-dev@manjaro';
       
-      const input = terminalContent.querySelector('.terminal-input');
+      const input = content.querySelector('.terminal-input');
       if (input) {
         setupCursor(input);
         input.addEventListener('keydown', handleTerminalInput);
@@ -195,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function restoreTerminal() {
-    terminalIcon.style.display = 'none';
+    appIcon.style.display = 'none';
     redDot.style.display = 'none';
     redDot.classList.remove('visible');
     dockRedDot.style.display = 'none';
@@ -210,8 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
       terminalContainer.classList.remove('restore');
       
       if (state.minimizedContent) {
-        terminalContent.innerHTML = state.minimizedContent;
-        terminalTitle.textContent = state.minimizedTitle;
+        content.innerHTML = state.minimizedContent;
+        ContainerTitle.textContent = state.minimizedTitle;
         tabsContainer.style.display = state.minimizedTitle.includes('profile') ? 'flex' : 'none';
         startTypingAll();
       }
@@ -250,14 +260,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const input = event.target;
     const command = input.value.trim();
-    const outputDiv = terminalContent.querySelector('.command-output');
+    const outputDiv = content.querySelector('.command-output');
     
     if (!command) return;
     
     if (command === 'cd profile/') {
-      terminalContent.innerHTML = state.originalContent;
+      content.innerHTML = state.originalContent;
       tabsContainer.style.display = 'flex';
-      terminalTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
+      ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
       
       const firstTab = document.querySelector('.tab');
       if (firstTab) {
@@ -405,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     input.value = '';
-    terminalContent.scrollTop = terminalContent.scrollHeight;
+    content.scrollTop = content.scrollHeight;
     input.focus();
   }
 
@@ -455,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const section = document.getElementById(`${tabName}-content`);
     if (section) {
       section.classList.add('active');
-      terminalTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
+      ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
       startTypingAll();
     }
   }
@@ -476,8 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
     "cd projects/ ",
     "python --version "
   ];
-  
-  // Thay thế bằng animation frames
+
   let animationFrameIds = [];
 
   function clearAnimationFrames() {
@@ -551,15 +560,16 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function setLanguage(lang) {
+    state.currentLanguage = lang;
+    localStorage.setItem('language', lang);
+
     document.querySelectorAll('.lang-content').forEach(content => {
       content.style.display = content.classList.contains(`lang-${lang}`) ? 'block' : 'none';
     });
-    
+
     const languageIcon = document.querySelector('.language-toggle .language-icon');
     if (languageIcon) languageIcon.textContent = lang;
-    
-    localStorage.setItem('language', lang);
-    state.currentLanguage = lang;
+
     startTypingAll();
   }
 
@@ -607,6 +617,68 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     lazyImages.forEach(lazyLoad);
+  }
+
+  // ======================== THEME MANAGEMENT ========================
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    setTheme(savedTheme);
+
+    createThemePopup();
+  }
+
+  function setTheme(themeName) {
+    const themeClasses = ['theme-default', 'theme-blue', 'theme-red', 'theme-yellow', 'theme-green'];
+    document.body.classList.remove(...themeClasses);
+
+    document.body.classList.add(`theme-${themeName}`);
+
+    localStorage.setItem('theme', themeName);
+
+    document.querySelectorAll('.theme-option').forEach(option => {
+      option.classList.toggle('active', option.classList.contains(`theme-${themeName}`));
+    });
+  }
+
+  function toggleThemePopup(e) {
+    e.stopPropagation();
+    const popup = document.getElementById('theme-popup');
+    popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  function createThemePopup() {
+    let themePopup = document.getElementById('theme-popup');
+    
+    if (!themePopup) {
+      themePopup = document.createElement('div');
+      themePopup.className = 'theme-selector-popup';
+      themePopup.id = 'theme-popup';
+      document.body.appendChild(themePopup);
+    }
+
+    themePopup.innerHTML = '';
+
+    const themes = ['default', 'blue', 'red', 'yellow', 'green'];
+
+    themes.forEach(theme => {
+      const option = document.createElement('div');
+      option.className = `theme-option theme-${theme}`;
+      option.title = theme.charAt(0).toUpperCase() + theme.slice(1);
+      option.addEventListener('click', () => {
+        setTheme(theme);
+        themePopup.style.display = 'none';
+      });
+      themePopup.appendChild(option);
+    });
+
+    themePopup.style.display = 'none';
+
+    const currentTheme = localStorage.getItem('theme') || 'default';
+    document.querySelectorAll('.theme-option').forEach(option => {
+      if (option.classList.contains(`theme-${currentTheme}`)) {
+        option.classList.add('active');
+      }
+    });
   }
 
   // ======================== START APPLICATION ========================
