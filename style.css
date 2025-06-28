@@ -1,0 +1,1114 @@
+/* ======================== VARIABLES ======================== */
+:root {
+  --manjaro-green: #34be5b;
+  --manjaro-dark-green: #16a085;
+  --manjaro-light-green: #1abc9c;
+  --terminal-bg: #1e1e1e;
+  --gray-dark: #2a2a2a;
+  --gray-light: #44475a;
+  --text-light: #f0f0f0;
+  --text-soft: #ddd;
+  --card-bg: rgba(68, 71, 90, 0.2);
+  --common-transition: transform 0.3s, box-shadow 0.3s;
+  --common-hover-effect: transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  --flex-center: display: flex;
+  align-items: center;
+}
+
+/* ======================== RESET & BASE ======================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'jetbrain mono', 'ubuntu mono', monospace, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg,
+      rgb(106, 20, 80) 0%,
+      rgba(7, 30, 61, 1) 25%,
+      rgba(31, 66, 135, 1) 50%,
+      rgba(39, 142, 165, 1) 75%,
+      rgba(33, 230, 193, 1) 100%) !important;
+  color: var(--text-light);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px 20px;
+}
+
+/* ======================== GNOME TOP BAR ======================== */
+.gnome-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 3000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+}
+
+.left-section,
+.right-section {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.clock-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.clock {
+  min-width: 100px;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.app-menu {
+  display: flex;
+  height: 100%;
+}
+
+.menu-item {
+  color: #eee;
+  text-decoration: none;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  transition: background-color 0.3s;
+}
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.system-tray {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.tray-item {
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+.tray-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.power-btn:hover {
+  color: #ff5555;
+}
+
+/* ======================== TERMINAL CONTAINER ======================== */
+.terminal-container {
+  width: 80vw;
+  max-width: 1200px;
+  height: 80vh;
+  background: var(--terminal-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(22, 160, 133, 0.4);
+  border: 1px solid #333;
+  transition: transform 0.3s, opacity 0.3s;
+  display: none;
+}
+
+.terminal-container.minimized,
+.terminal-container.closed {
+  transform: scale(0.1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes restoreTerminal {
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.terminal-container.restore {
+  transform: scale(0.1);
+  opacity: 0;
+  animation: restoreTerminal 0.1s ease forwards;
+}
+
+.terminal-container.maximized {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100% !important;
+  border-radius: 0 !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* ======================== APP ICON & DOCK ======================== */
+.app-icon,
+.dock-icon {
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s, opacity 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: var(--gray-dark);
+  z-index: 10000;
+  transform: scale(0);
+  opacity: 0;
+  display: flex;
+}
+
+.app-icon.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.icon-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.red-dot,
+.dock-icon .red-dot {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #ff5555;
+  border-radius: 50%;
+  display: none;
+  z-index: 10001;
+  top: -15px;
+  right: -15px;
+}
+
+.red-dot.visible,
+.dock-icon .red-dot.visible {
+  display: block;
+}
+
+.dock {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  display: flex;
+  align-items: flex-end;
+  height: 60px;
+  padding: 0 20px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  z-index: 9999;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.dock.hidden {
+  transform: translateX(-50%) translateY(100px);
+}
+
+.dock-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: auto;
+  transition: transform 0.2s, background 0.2s;
+  transform-origin: bottom;
+}
+
+.dock-icon:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.25) translateY(-5px);
+}
+
+.dock-icon .icon-content i {
+  font-size: 24px;
+  color: var(--manjaro-green);
+}
+
+/* ======================== TERMINAL HEADER & TABS ======================== */
+.terminal-header {
+  position: relative;
+  height: 40px;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border-bottom: 1px solid #444;
+  gap: 10px;
+}
+
+.terminal-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  color: var(--text-soft);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.terminal-buttons .btn {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: background-color 0.2s;
+}
+
+.terminal-buttons .btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-buttons .close:hover {
+  background-color: #963232;
+}
+
+.terminal-buttons .maximize:hover,
+.terminal-buttons .minimize:hover {
+  background-color: var(--gray-dark);
+}
+
+.terminal-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-tab,
+.language-toggle {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: background-color 0.2s;
+}
+
+.language-toggle {
+  font-size: 12px;
+  width: auto;
+  padding: 0 8px;
+}
+
+.add-tab:hover,
+.language-toggle:hover {
+  background-color: var(--gray-dark);
+}
+
+.tabs-container {
+  background: var(--gray-dark);
+  display: flex;
+  border-bottom: 1px solid #444;
+  padding: 0 5px;
+  overflow-x: auto;
+}
+
+.tab {
+  flex: 1 1 0;
+  padding: 12px 0;
+  background: var(--gray-dark);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  font-size: 15px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tab.active {
+  background: var(--terminal-bg);
+  color: var(--text-light);
+  border-top: 2px solid var(--manjaro-green);
+}
+
+.tab:hover:not(.active) {
+  background: #333;
+}
+
+.terminal-content {
+  height: calc(100% - 40px - 45px);
+  overflow-y: auto;
+  padding: 25px;
+  font-size: 16px;
+  line-height: 1.6;
+  background: var(--terminal-bg);
+}
+
+.content-section {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.content-section.active {
+  display: block;
+  opacity: 1;
+}
+
+.prompt {
+  color: var(--manjaro-green);
+  font-weight: bold;
+}
+
+.command {
+  color: #8be9fd;
+  margin-left: -65px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background-color: var(--text-light);
+  animation: blink 1s infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.output {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.output-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  padding: 4px 0;
+  flex-wrap: nowrap;
+  position: relative;
+}
+
+.zsh-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+.bg-icon {
+  background-color: #ddd;
+  color: #000;
+}
+
+.green-bg {
+  background-color: var(--manjaro-dark-green);
+  color: #000;
+}
+
+.fg-icon {
+  color: var(--manjaro-dark-green);
+}
+
+.white-fg {
+  color: #ddd;
+}
+
+.green-edge {
+  color: var(--manjaro-dark-green);
+}
+
+.zsh-unified {
+  display: flex;
+  align-items: stretch;
+  height: 28.5px;
+  min-width: 165px;
+  max-width: 262.5px;
+  margin-right: 7.5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.manjaro-icon-bg,
+.manjaro-file-bg {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 13.5px;
+  padding: 0 13.5px;
+}
+
+.manjaro-icon-bg {
+  background: #fff;
+  color: var(--manjaro-dark-green);
+  border-radius: 7.5px 0 0 7.5px;
+  width: 36px;
+  min-width: 36px;
+  justify-content: center;
+  font-size: 16.5px;
+  padding: 0;
+}
+
+.manjaro-file-bg {
+  background: var(--manjaro-dark-green);
+  color: #fff;
+  border-radius: 0 7.5px 7.5px 0;
+  flex: 1;
+}
+
+.manjaro-file-bg i {
+  margin-right: 4.5px;
+  color: #fff;
+}
+
+/* ======================== COMMON PROFILE ELEMENTS ======================== */
+.profile-header {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 30px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.avatar-container {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 3px solid var(--manjaro-light-green);
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(26, 188, 156, 0.4);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, var(--manjaro-light-green), var(--manjaro-green));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--terminal-bg);
+  font-size: 80px;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.name {
+  color: var(--manjaro-green);
+  font-size: 32px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.title {
+  color: #ffb86c;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.about {
+  margin-bottom: 25px;
+  line-height: 1.7;
+}
+
+.about p {
+  margin-bottom: 15px;
+}
+
+.skills {
+  margin-top: 10px;
+  transition: var(--common-transition);
+}
+
+.skill-tag {
+  display: inline-block;
+  background: var(--gray-light);
+  color: #f8f8f2;
+  padding: 6px 15px;
+  border-radius: 4px;
+  margin: 0 8px 12px 0;
+  font-size: 20px;
+  transition: all 0.2s;
+}
+
+.skill-tag:hover {
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.social-links {
+  display: flex;
+  gap: 20px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  color: var(--manjaro-light-green);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  padding: 10px 20px;
+  background: rgba(26, 188, 156, 0.1);
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.social-link:hover {
+  background: rgba(26, 188, 156, 0.2);
+  color: var(--manjaro-green);
+}
+
+.social-link i {
+  margin-right: 10px;
+  font-size: 22px;
+}
+
+/* ======================== COMMON CARD ELEMENTS ======================== */
+.project,
+.certificate,
+.contact-card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  border-left: 3px solid var(--manjaro-dark-green);
+  transition: var(--common-transition);
+  margin-top: 20px;
+}
+
+.project:hover,
+.certificate:hover,
+.contact-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.project-title,
+.certificate-title,
+.contact-title {
+  color: #ffb86c;
+  font-size: 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.project-title i,
+.contact-title i {
+  margin-right: 10px;
+  color: #ffb86c;
+}
+
+.project-description,
+.certificate-desc {
+  margin-bottom: 15px;
+  line-height: 1.7;
+}
+
+.github-link {
+  color: var(--manjaro-light-green);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 15px;
+  background: rgba(26, 188, 156, 0.1);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.github-link:hover {
+  background: rgba(26, 188, 156, 0.2);
+  text-decoration: underline;
+}
+
+.github-link i {
+  margin-right: 8px;
+}
+
+.certificate-org {
+  color: #8be9fd;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+}
+
+.certificate-org i {
+  margin-right: 8px;
+}
+
+.certificate-date {
+  color: var(--manjaro-light-green);
+  margin-bottom: 4px;
+  font-style: italic;
+  font-size: 15px;
+}
+
+.certificate-desc {
+  margin-bottom: 0;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #e0e0e0;
+  padding-left: 18px;
+  position: relative;
+}
+
+.certificate-desc:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--manjaro-green);
+  font-size: 16px;
+  top: 0;
+}
+
+.contact-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.contact-detail {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+}
+
+.contact-detail i {
+  width: 30px;
+  color: #8be9fd;
+  font-size: 18px;
+}
+
+.icon {
+  font-size: 36px;
+  line-height: 1;
+  vertical-align: middle;
+  margin-right: 20px;
+  margin-left: -10px;
+}
+
+/* ======================== TERMINAL INPUT ======================== */
+.terminal-input {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-size: 16px;
+  width: 100%;
+  outline: none;
+  caret-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.input-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: -60px;
+}
+
+.custom-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background-color: var(--text-light);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: blink 1s infinite;
+  z-index: 10;
+  vertical-align: middle;
+  margin-left: -12px;
+}
+
+.error {
+  color: #ff5555;
+}
+
+.output-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.zsh-unified {
+  margin: 0;
+  padding: 0 75px 0 0;
+}
+
+.neofetch-output {
+  color: var(--manjaro-light-green);
+  margin-top: 10px;
+  white-space: pre;
+}
+
+/* ======================== LAZY LOADING ======================== */
+img.lazy-load {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+img.lazy-load.loaded {
+  opacity: 1;
+}
+
+/* ======================== RESPONSIVE STYLES ======================== */
+@media (max-width: 360px) {
+  body {
+    padding: 10px;
+  }
+
+  .terminal-container {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .app-icon {
+    width: 50px;
+    height: 50px;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .app-icon i {
+    font-size: 32px;
+  }
+
+  .red-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .terminal-header {
+    padding: 0 8px;
+    gap: 5px;
+  }
+
+  .zsh-unified {
+    height: 14.25px;
+    min-width: 82.5px;
+    max-width: 131.25px;
+    margin-right: 3.75px;
+  }
+
+  .manjaro-icon-bg,
+  .manjaro-file-bg {
+    font-size: 6.75px;
+    padding: 0 6.75px;
+  }
+
+  .manjaro-icon-bg {
+    border-radius: 3.75px 0 0 3.75px;
+    width: 18px;
+    min-width: 18px;
+    font-size: 8.25px;
+  }
+
+  .manjaro-file-bg {
+    border-radius: 0 3.75px 3.75px 0;
+  }
+
+  .manjaro-file-bg i {
+    margin-right: 2.25px;
+  }
+
+  .terminal-title {
+    font-size: 12px;
+    left: 45%;
+  }
+
+  .terminal-buttons .btn {
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+  }
+
+  .terminal-content {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .avatar-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+  }
+
+  .avatar {
+    font-size: 50px;
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .skills {
+    margin-top: 15px;
+  }
+
+  .skill-tag {
+    font-size: 16px;
+    padding: 5px 10px;
+    margin: 0 5px 8px 0;
+  }
+
+  .social-links {
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .social-link {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .project-title {
+    font-size: 18px;
+  }
+
+  .contact-info {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0;
+    justify-content: space-between;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabs-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 5px;
+    font-size: 13px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .output-line {
+    flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .terminal-container {
+    width: 95vw;
+    height: 95vh;
+    max-width: 100%;
+  }
+
+  .terminal-content {
+    padding: 20px;
+    font-size: 15px;
+  }
+
+  .zsh-unified {
+    height: 21.4px;
+    min-width: 123.75px;
+    max-width: 196.9px;
+    margin-right: 5.6px;
+  }
+
+  .manjaro-icon-bg,
+  .manjaro-file-bg {
+    font-size: 10.1px;
+    padding: 0 10.1px;
+  }
+
+  .manjaro-icon-bg {
+    border-radius: 5.6px 0 0 5.6px;
+    width: 27px;
+    min-width: 27px;
+    font-size: 12.4px;
+  }
+
+  .manjaro-file-bg {
+    border-radius: 0 5.6px 5.6px 0;
+  }
+
+  .manjaro-file-bg i {
+    margin-right: 3.4px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .avatar-container {
+    margin: 0 auto;
+  }
+
+  .profile-info {
+    min-width: 100%;
+  }
+
+  .contact-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tabs-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0;
+    justify-content: space-between;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .tabs-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 5px;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .output-line {
+    flex-wrap: wrap;
+  }
+
+  .certificate {
+    padding: 12px 8px;
+    border-radius: 5px;
+    margin-bottom: 18px;
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  .certificate-title {
+    font-size: 17px;
+    gap: 5px;
+  }
+
+  .certificate-org {
+    font-size: 13px;
+    gap: 4px;
+  }
+
+  .certificate-date {
+    font-size: 12px;
+  }
+
+  .certificate-desc {
+    font-size: 13px;
+    padding-left: 14px;
+  }
+
+  .certificate-desc:before {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .terminal-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}

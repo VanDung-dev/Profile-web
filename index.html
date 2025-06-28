@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VanDung-dev Profile</title>
+  <link rel="stylesheet" href="https://www.nerdfonts.com/assets/css/webfont.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <div class="gnome-bar">
+    <div class="left-section">
+      <div class="app-menu">
+        <div class="menu-item"><i class="nf nf-linux-manjaro"></i></div>
+        <div class="menu-item"> Terminal</div>
+      </div>
+    </div>
+    
+    <div class="clock-container">
+      <div class="clock" id="clock"></div>
+    </div>
+    
+    <div class="right-section">
+      <div class="system-tray">
+        <div class="tray-item">
+          <i class="nf nf-md-bluetooth"></i>
+        </div>
+        <div class="tray-item">
+          <i class="nf nf-fa-volume_low"></i>
+        </div>
+        <div class="tray-item">
+          <i class="nf nf-fa-wifi"></i>
+        </div>
+        <div class="tray-item">
+          <i class="nf nf-fa-bell"></i>
+        </div>
+        <div class="tray-item">
+          <i class="nf nf-md-battery_medium"></i>
+        </div>
+        <div class="tray-item power-btn">
+          <i class="nf nf-iec-power"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="terminal-container">
+    <div class="terminal-header">
+      <div class="terminal-left">
+        <div class="add-tab"><i class="nf nf-oct-diff_added"></i></div>
+        <div class="btn language-toggle" title="Toggle Language (EN/vi)">
+          <span class="language-icon"></span>
+        </div>
+      </div>
+      <div class="terminal-title">VanDung-dev@manjaro: ~/profile</div>
+      <div class="terminal-buttons">
+        <div class="btn minimize"><i class="nf nf-md-window_minimize"></i></div>
+        <div class="btn maximize"><i class="nf nf-md-window_maximize"></i></div>
+        <div class="btn close"><i class="nf nf-md-close"></i></div>
+      </div>
+    </div>
+    <div class="tabs-container">
+      <div class="tab active" data-tab="home">Home</div>
+      <div class="tab" data-tab="projects">Projects</div>
+      <div class="tab" data-tab="certificates">Certificates</div>
+      <div class="tab" data-tab="contact">Contact</div>
+    </div>
+    <div class="terminal-content">
+      <!-- Home Section -->
+      <div class="content-section active" id="home-content">
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command">cat profile.txt </span>
+            </div>
+          </div>
+          <div class="lang-content lang-vi">
+            <div class="profile-header">
+              <div class="avatar-container">
+                <div class="avatar">
+                  <img 
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" 
+                  data-src="../images/avatar.webp" 
+                  alt="Avatar"
+                  class="lazy-load"
+                  style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                  >
+                </div>
+              </div>
+              <div class="profile-info">
+                <div class="name">Nguyễn Lê Văn Dũng</div>
+                <div class="title">Lập trình viên Python Back-end</div>
+                <div class="about">
+                  <p>Xin chào! Tôi là một lập trình viên Python với hơn 2 năm kinh nghiệm trong phát triển phần mềm và
+                    giải pháp công nghệ.</p>
+                  <p>Chuyên môn của tôi bao gồm phát triển ứng dụng web, hệ thống phân tích dữ liệu, và các giải pháp tự
+                    động hóa. Tôi đam mê xây dựng các hệ thống thông minh và hiệu quả bằng Python.</p>
+                  <p>Hiện tại tôi đang tập trung nghiên cứu về AI và ứng dụng blockchain, đồng thời đóng góp vào các dự
+                    án mã nguồn mở trong cộng đồng Python.</p>
+                </div>
+              </div>
+            </div>
+            <div class="skills">
+              <p><strong>Kỹ năng chính:</strong></p>
+              <div>
+                <span class="skill-tag"><i class="nf nf-dev-python"></i> Python</span>
+                <span class="skill-tag"><i class="nf nf-dev-linux"></i> Linux</span>
+                <span class="skill-tag"><i class="nf nf-md-security"></i> Security</span>
+                <span class="skill-tag"><i class="nf nf-dev-mongodb"></i> MongoDB</span>
+                <span class="skill-tag"><i class="nf nf-fa-bitcoin"></i> Blockchain</span>
+                <span class="skill-tag"><i class="nf nf-dev-git"></i> Git</span>
+                <span class="skill-tag"><i class="nf nf-fa-database"></i> SQL/NoSQL</span>
+                <span class="skill-tag"><i class="nf nf-fa-gamepad"></i> PyGame</span>
+              </div>
+            </div>
+            <div class="social-links">
+              <a href="https://github.com/VanDung-dev/" class="social-link"><i class="nf nf-fa-github"></i> GitHub</a>
+              <a href="https://www.linkedin.com/in/dung-nguyen-211bab348/" class="social-link"><i
+                  class="nf nf-fa-linkedin"></i> LinkedIn</a>
+              <a href="#" class="social-link"><i class="nf nf-fa-twitter"></i> Twitter</a>
+              <a href="mailto:dungnguyen2661@gmail.com" class="social-link"><i class="nf nf-fa-envelope"></i> Email</a>
+            </div>
+          </div>
+          <div class="lang-content lang-en" style="display: none;">
+            <div class="profile-header">
+              <div class="avatar-container">
+                <div class="avatar">
+                  <img 
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" 
+                  data-src="../images/avatar.webp" 
+                  alt="Avatar"
+                  class="lazy-load"
+                  style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                  >
+                </div>
+              </div>
+              <div class="profile-info">
+                <div class="name">Nguyen Le Van Dung</div>
+                <div class="title">Python Back-end Developer</div>
+                <div class="about">
+                  <p>Hello! I am a Python developer with over 2 years of experience in software development and
+                    technology solutions.</p>
+                  <p>My expertise includes web application development, data analysis systems, and automation solutions.
+                    I am passionate about building intelligent and efficient systems using Python.</p>
+                  <p>Currently, I am focusing on researching AI and blockchain applications while contributing to
+                    open-source Python projects in the community.</p>
+                </div>
+              </div>
+            </div>
+            <div class="skills">
+              <p><strong>Key Skills:</strong></p>
+              <div>
+                <span class="skill-tag"><i class="nf nf-dev-python"></i> Python</span>
+                <span class="skill-tag"><i class="nf nf-dev-linux"></i> Linux</span>
+                <span class="skill-tag"><i class="nf nf-md-security"></i> Security</span>
+                <span class="skill-tag"><i class="nf nf-dev-mongodb"></i> MongoDB</span>
+                <span class="skill-tag"><i class="nf nf-fa-bitcoin"></i> Blockchain</span>
+                <span class="skill-tag"><i class="nf nf-dev-git"></i> Git</span>
+                <span class="skill-tag"><i class="nf nf-fa-database"></i> SQL/NoSQL</span>
+                <span class="skill-tag"><i class="nf nf-fa-gamepad"></i> PyGame</span>
+              </div>
+            </div>
+            <div class="social-links">
+              <a href="https://github.com/VanDung-dev/" class="social-link"><i class="nf nf-fa-github"></i> GitHub</a>
+              <a href="https://www.linkedin.com/in/dung-nguyen-211bab348/" class="social-link"><i
+                  class="nf nf-fa-linkedin"></i> LinkedIn</a>
+              <a href="#" class="social-link"><i class="nf nf-fa-twitter"></i> Twitter</a>
+              <a href="mailto:dungnguyen2661@gmail.com" class="social-link"><i class="nf nf-fa-envelope"></i> Email</a>
+            </div>
+          </div>
+        </div>
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command"><span class="cursor"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Projects Section -->
+      <div class="content-section" id="projects-content">
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command">ls projects/ </span>
+            </div>
+          </div>
+          <div class="lang-content lang-vi">
+            <div class="project">
+              <div class="project-title"><i class="nf nf-fa-chess"></i>Game Cờ Vua Python</div>
+              <div class="project-description">
+                Ứng dụng game cờ vua đa nền tảng sử dụng PyGame với giao diện đồ họa 2D cơ bản. Hỗ trợ cả chế độ chơi
+                hai người và chơi với máy ở nhiều cấp độ khó. Tính năng nổi bật: Gợi ý nước đi bằng thuật toán Minimax,
+                undo/redo, và mô hình cờ vua tự phát triển không dựa trên PyChess.
+              </div>
+              <a href="https://github.com/VanDung-dev/Chess_Python" class="github-link"><i class="nf fa-github"></i>
+                Xem mã nguồn trên GitHub</a>
+            </div>
+            <div class="project">
+              <div class="project-title"> <i class="nf nf-fa-discord"></i>Bot Discord Đa chức năng</div>
+              <div class="project-description">
+                Bot Discord với hơn 50 lệnh khác nhau được phát triển bằng Discord.py API. Tích hợp nhiều dịch vụ bên
+                thứ ba như YouTube, tìm hình ảnh, chat bot AI. Tính năng chính: Quản lý server, thông báo tự động, công
+                cụ kiểm duyệt nội dung, và chat bot AI dựa trên mô hình Google Gemini.
+              </div>
+              <a href="https://github.com/VanDung-dev/DSB-bot" class="github-link"><i class="nf fa-github"></i> Xem mã
+                nguồn trên GitHub</a>
+            </div>
+          </div>
+          <div class="lang-content lang-en" style="display: none;">
+            <div class="project">
+              <div class="project-title"><i class="nf nf-fa-chess"></i>Python Chess Game</div>
+              <div class="project-description">
+                A cross-platform chess game built with PyGame, featuring a basic 2D graphical interface. Supports both
+                two-player mode and AI opponents at various difficulty levels. Key features: Move suggestions using the
+                Minimax algorithm, undo/redo, and a custom chess model not based on PyChess.
+              </div>
+              <a href="https://github.com/VanDung-dev/Chess_Python" class="github-link"><i class="nf fa-github"></i>
+                View source on GitHub</a>
+            </div>
+            <div class="project">
+              <div class="project-title"><i class="nf nf-fa-discord"></i>Multifunctional Discord Bot</div>
+              <div class="project-description">
+                A Discord bot with over 50 commands, developed using the Discord.py API. Integrates third-party services
+                like YouTube, image search, and AI chatbot. Main features: Server management, automated notifications,
+                content moderation tools, and an AI chatbot powered by Google Gemini.
+              </div>
+              <a href="https://github.com/VanDung-dev/DSB-bot" class="github-link"><i class="nf fa-github"></i> View
+                source on GitHub</a>
+            </div>
+          </div>
+        </div>
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command"><span class="cursor"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Certificates Section -->
+      <div class="content-section" id="certificates-content">
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command">ls certificates/ </span>
+            </div>
+          </div>
+          <div class="lang-content lang-vi">
+            <div class="certificate">
+              <div class="certificate-title"><i class="nf nf-fa-certificate"></i>Kỹ sư phần mềm</div>
+              <div class="certificate-org"><i class="nf nf-fa-university"></i> Trường đại học Nguyễn Tất Thành</div>
+              <div class="certificate-date">Tháng 6, 2025</div>
+              <div class="certificate-desc">Tháng 3, 2025 - Chứng chỉ công nhận kỹ năng Python nâng cao.</div>
+              <div class="certificate-desc">Tháng 6, 2025 - Chứng chỉ công nhận kỹ năng bảo mật.</div>
+              <div class="certificate-desc">Tháng 6, 2025 - Chứng chỉ công nhận kỹ năng cấu trúc dữ liệu và giải thuật.
+              </div>
+            </div>
+          </div>
+          <div class="lang-content lang-en" style="display: none;">
+            <div class="certificate">
+              <div class="certificate-title"><i class="nf nf-fa-certificate"></i>Software Engineer</div>
+              <div class="certificate-org"><i class="nf nf-fa-university"></i> Nguyen Tat Thanh University</div>
+              <div class="certificate-date">June 2025</div>
+              <div class="certificate-desc">March 2025 - Certificate recognizing advanced Python skills.</div>
+              <div class="certificate-desc">March 2025 - Certificate recognizing security skills.</div>
+              <div class="certificate-desc">June 2025 - Certificate recognizing data structures and algorithms skills.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command"><span class="cursor"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Contact Section -->
+      <div class="content-section" id="contact-content">
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command">cat contact.txt </span>
+            </div>
+          </div>
+          <div class="lang-content lang-vi">
+            <div class="contact-info">
+              <div class="contact-card">
+                <div class="contact-title"><i class="nf nf-fa-address_card"></i>Liên hệ</div>
+                <div class="contact-detail"><i class="nf nf-fa-envelope"></i> dungnguyen2661@gmail.com</div>
+                <div class="contact-detail"><i class="nf nf-fa-phone"></i> +84 378 321 747</div>
+                <div class="contact-detail"><i class="nf nf-fa-map_marker"></i> Thành phố Hồ Chí Minh, Việt Nam
+                </div>
+              </div>
+              <div class="contact-card">
+                <div class="contact-title"><i class="nf nf-fa-comment"></i>Gửi tin nhắn</div>
+                <div class="contact-detail">Bạn có thể gửi tin nhắn trực tiếp cho tôi thông qua các nền tảng dưới đây:
+                </div>
+                <div class="social-links">
+                  <a href="https://telegram.org" class="social-link"><i class="nf nf-fa-telegram"></i> Telegram</a>
+                  <a href="https://discord.com" class="social-link"><i class="nf nf-fa-discord"></i> Discord</a>
+                </div>
+              </div>
+              <div class="contact-card">
+                <div class="contact-title"><i class="nf nf-fa-calendar_days"></i>Lịch làm việc</div>
+                <div class="contact-detail">Tôi sẵn sàng cho các cơ hội hợp tác và dự án mới. Bạn có thể đặt lịch hẹn
+                  thảo luận qua:</div>
+                <a href="https://calendly.com" class="github-link"> Đặt lịch hẹn
+                  qua Calendly</a>
+              </div>
+            </div>
+          </div>
+          <div class="lang-content lang-en" style="display: none;">
+            <div class="contact-info">
+              <div class="contact-card">
+                <div class="contact-title"><i class="nf nf-fa-address_card"></i>Contact</div>
+                <div class="contact-detail"><i class="nf nf-fa-envelope"></i> dungnguyen2661@gmail.com</div>
+                <div class="contact-detail"><i class="nf nf-fa-phone"></i> +84 378 321 747</div>
+                <div class="contact-detail"><i class="nf nf-fa-map_marker"></i> Ho Chi Minh City, Vietnam</div>
+              </div>
+              <div class="contact-card">
+                <div class="contact-title"><i class="nf nf-fa-comment"></i>Send a Message</div>
+                <div class="contact-detail">You can send me a direct message through the platforms below:</div>
+                <div class="social-links">
+                  <a href="https://telegram.org" class="social-link"><i class="nf nf-fa-telegram"></i> Telegram</a>
+                  <a href="https://discord.com" class="social-link"><i class="nf nf-fa-discord"></i> Discord</a>
+                </div>
+              </div>
+              <div class="contact-card">
+                <div class="contact-title"><i class="nf nf-fa-calendar_days"></i>Work Schedule</div>
+                <div class="contact-detail">I am open to collaboration opportunities and new projects. You can schedule
+                  a discussion via:</div>
+                <a href="https://calendly.com/dungnguyen2661/new-meeting" class="github-link"> Schedule a meeting via
+                  Calendly</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="output">
+          <div class="output-line">
+            <div class="zsh-left">
+              <div class="zsh-unified">
+                <span class="zsh-icon manjaro-icon-bg">
+                  <i class="nf nf-linux-manjaro"></i>
+                </span>
+                <span class="zsh-file manjaro-file-bg">
+                  <i class="nf nf-custom-folder_open"></i> ~/profile
+                </span>
+              </div>
+              <span class="command"><span class="cursor"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-icon" id="terminal-icon" style="display: none;">
+    <div class="icon-content">
+      <span class="red-dot" id="red-dot"></span>
+      <i class="nf nf-dev-terminal"></i>
+    </div>
+  </div>
+  <div class="dock">
+    <div class="dock-icon" id="dock-terminal">
+      <div class="icon-content">
+        <span class="red-dot" id="dock-red-dot"></span>
+        <i class="nf nf-dev-terminal"></i>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
