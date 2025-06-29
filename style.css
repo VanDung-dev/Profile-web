@@ -491,15 +491,22 @@ body {
   margin-left: -65px;
   word-break: keep-all;
   overflow-wrap: break-word;
+  min-height: 1.2em;
+  white-space: pre;
 }
 
 .cursor {
   display: inline-block;
   width: 8px;
-  height: 1em;
-  background-color: var(--text-light);
+  height: 1.2em;
+  background-color: #fff;
   animation: blink 1s infinite;
   vertical-align: middle;
+  margin-left: 2px;
+}
+
+.cursor.waiting {
+  animation:  blink 1s infinite;;
 }
 
 @keyframes blink {
@@ -823,6 +830,14 @@ body {
   caret-color: transparent;
   padding: 0;
   margin: 0;
+  position: relative;
+  z-index: 2;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.terminal-input::selection {
+  background: var(--manjaro-green);
+  color: #000;
 }
 
 .input-container {
@@ -830,20 +845,30 @@ body {
   display: inline-flex;
   align-items: center;
   margin-left: -60px;
+  width: calc(100% + 60px);
 }
 
 .custom-cursor {
   display: inline-block;
   width: 8px;
-  height: 1em;
-  background-color: var(--text-light);
+  height: 1.2em;
+  background-color: #fff;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   animation: blink 1s infinite;
-  z-index: 10;
+  z-index: 1;
   vertical-align: middle;
-  margin-left: -12px;
+  pointer-events: none;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px #000;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.25; }
 }
 
 .error {

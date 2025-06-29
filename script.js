@@ -334,22 +334,25 @@ document.addEventListener('DOMContentLoaded', function() {
     else if (command === 'neofetch') {
       outputDiv.innerHTML = `
         <div class="neofetch-output">
-          VanDung-dev@manjaro
-          ----------------
-          OS: Manjaro Linux x86_64
-          Host: Virtual Machine
-          Kernel: 6.1.0-10-amd64
-          Uptime: 2 days, 4 hours, 30 mins
-          Packages: 1245 (pacman)
-          Shell: zsh 5.9
-          Resolution: 1920x1080
-          DE: GNOME 43.1
-          WM: Mutter
-          WM Theme: Adwaita
-          Terminal: gnome-terminal
-          CPU: Intel i7-12700K (16) @ 5.00GHz
-          GPU: NVIDIA GeForce RTX 3080
-          Memory: 12.5GiB / 31.2GiB
+  ██████████████████  ████████  VanDung-devg@manjaro 
+  ██████████████████  ████████  ----------------- 
+  ██████████████████  ████████  OS: Manjaro Linux x86_64 
+  ██████████████████  ████████  Host: ASUS TUF Gaming A16 FA617NS
+  ████████            ████████  Kernel: 6.12.3-1-MANJARO 
+  ████████  ████████  ████████  Uptime: 1 hour, 54 mins 
+  ████████  ████████  ████████  Packages: 1495 (pacman), 8 (flatpak) 
+  ████████  ████████  ████████  Shell: zsh 5.9 
+  ████████  ████████  ████████  Resolution: 1920x1080 
+  ████████  ████████  ████████  DE: GNOME 48.2 
+  ████████  ████████  ████████  WM: Mutter 
+  ████████  ████████  ████████  WM Theme: Adwaita 
+  ████████  ████████  ████████  Theme: adw-gtk3-dark [GTK2/3] 
+  ████████  ████████  ████████  Icons: Papirus-Dark-Maia [GTK2/3] 
+                                Terminal: gnome-terminal 
+                                CPU: AMD Ryzen 7 7735HS with Radeon Graphics (16) @ 4.829GHz 
+                                GPU: AMD ATI Radeon 680M 
+                                GPU: AMD ATI Radeon RX 7600/7600 XT/7600M XT/7600S/7700S / PRO W7600 
+                                Memory: 10969MiB / 31328MiB 
         </div>`;
     }
     else if (command === 'ls' || command === 'ls -la') {
@@ -391,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ':: Starting full system upgrade...',
         ' resolving dependencies...',
         ' looking for conflicting packages...',
-        ' Packages (5) linux-6.12.0-11  python-3.12.9  zsh-5.9.1  nano-7.2  git-2.44.0',
+        ' Packages (5) linux-6.12.34  python-3.12.9  zsh-5.9.1  nano-7.2  git-2.44.0',
         '',
         'Total Download Size:    120.00 MiB',
         'Total Installed Size:   500.00 MiB',
@@ -486,37 +489,131 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ======================== UI HELPERS ========================
+  let tempSpan = null;
+
   function setupCursor(input) {
+    input.style.caretColor = 'transparent';
+    
     const cursor = input.nextElementSibling?.classList.contains('custom-cursor') 
       ? input.nextElementSibling 
       : createCursorElement(input.parentNode);
     
-    input.addEventListener('input', () => updateCursorPosition(input, cursor));
-    input.dispatchEvent(new Event('input'));
+    if (!tempSpan) {
+      tempSpan = document.createElement('span');
+      Object.assign(tempSpan.style, {
+        position: 'absolute',
+        visibility: 'hidden',
+        whiteSpace: 'pre',
+        top: '-9999px',
+        left: '-9999px',
+        pointerEvents: 'none'
+      });
+      document.body.appendChild(tempSpan);
+    }
+    
+    tempSpan.style.font = window.getComputedStyle(input).font;
+
+    input.addEventListener('mousedown', handleMouseDown);
+    input.addEventListener('mousemove', handleMouseMove);
+    input.addEventListener('mouseup', handleMouseUp);
+    
+    input.addEventListener('keydown', handleKeyDown);
+    input.addEventListener('input', handleInput);
+    
+    input.addEventListener('focus', () => cursor.style.opacity = '1');
+    input.addEventListener('blur', () => cursor.style.opacity = '0');
+    
+    updateCursorPosition(input, cursor);
   }
 
-  function createCursorElement(parent) {
-    const cursor = document.createElement('span');
-    cursor.classList.add('custom-cursor');
-    parent.appendChild(cursor);
-    return cursor;
+  function handleMouseDown(e) {
+    const input = e.target;
+    const cursor = input.nextElementSibling;
+    const rect = input.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    
+    input.dataset.selectionStart = calculatePosition(input, x);
+    setCursorPosition(input, cursor, x);
+    input.dataset.selecting = "true";
+  }
+
+  function handleMouseMove(e) {
+    const input = e.target;
+    const cursor = input.nextElementSibling;
+    
+    if (input.dataset.selecting === "true") {
+      const rect = input.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const endPos = calculatePosition(input, x);
+      const startPos = parseInt(input.dataset.selectionStart);
+      
+      input.setSelectionRange(Math.min(startPos, endPos), Math.max(startPos, endPos));
+      setCursorPosition(input, cursor, x);
+    }
+  }
+
+  function handleMouseUp() {
+    const input = event.target;
+    const cursor = input.nextElementSibling;
+    
+    input.dataset.selecting = "false";
+    updateCursorPosition(input, cursor);
+  }
+
+  function handleKeyDown(e) {
+    const input = e.target;
+    const cursor = input.nextElementSibling;
+    
+    if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+      requestAnimationFrame(() => updateCursorPosition(input, cursor));
+    }
+  }
+
+  function handleInput() {
+    const input = event.target;
+    const cursor = input.nextElementSibling;
+    
+    requestAnimationFrame(() => updateCursorPosition(input, cursor));
+  }
+
+  function calculatePosition(input, clickX) {
+    const text = input.value;
+    let position = 0;
+    
+    for (let i = 0; i <= text.length; i++) {
+      tempSpan.textContent = text.substring(0, i);
+      const width = tempSpan.offsetWidth;
+      
+      if (clickX < width + 3) {
+        position = i;
+        break;
+      }
+      
+      if (i === text.length) {
+        position = text.length;
+      }
+    }
+    
+    return position;
+  }
+
+  function setCursorPosition(input, cursor, clickX) {
+    const position = calculatePosition(input, clickX);
+    input.setSelectionRange(position, position);
+    updateCursorPosition(input, cursor);
   }
 
   function updateCursorPosition(input, cursor) {
-    const text = input.value;
-    const tempSpan = document.createElement('span');
-    
-    Object.assign(tempSpan.style, {
-      visibility: 'hidden',
-      position: 'absolute',
-      whiteSpace: 'pre',
-      font: window.getComputedStyle(input).font
-    });
-    
+    const text = input.value.substring(0, input.selectionStart);
     tempSpan.textContent = text;
-    document.body.appendChild(tempSpan);
-    cursor.style.left = `${tempSpan.offsetWidth + 12}px`;
-    document.body.removeChild(tempSpan);
+    cursor.style.left = `${tempSpan.offsetWidth}px`;
+  }
+  
+  function createCursorElement(parent) {
+    const cursor = document.createElement('span');
+    cursor.className = 'custom-cursor';
+    parent.appendChild(cursor);
+    return cursor;
   }
 
   function handleTabClick() {
@@ -576,30 +673,49 @@ document.addEventListener('DOMContentLoaded', function() {
     let charIndex = 0;
     let commandIndex = 0;
     let isDeleting = false;
+    let isWaiting = false;
+    let waitStart = 0;
     let lastTimestamp = 0;
-    const typingSpeed = isDeleting ? 50 : 100;
+
+    commandElement.innerHTML = `<span class="typed"></span><span class="cursor"></span>`;
+    const typedSpan = commandElement.querySelector('.typed');
     
     function type(timestamp) {
       if (!lastTimestamp) lastTimestamp = timestamp;
+      
+      if (isWaiting) {
+        typedSpan.textContent = currentCommand;
+        
+        if (timestamp - waitStart >= 3000) {
+          isWaiting = false;
+          isDeleting = true;
+          lastTimestamp = timestamp;
+        } else {
+          const id = requestAnimationFrame(type);
+          animationFrameIds.push(id);
+          return;
+        }
+      }
+      
       const elapsed = timestamp - lastTimestamp;
+      const typingSpeed = isDeleting ? 30 : 80 + Math.random() * 50;
       
       if (elapsed >= typingSpeed) {
         const currentText = commands[commandIndex];
         if (!currentText) return;
         
-        if (!isDeleting && charIndex < currentText.length) {
+        if (!isDeleting && !isWaiting && charIndex < currentText.length) {
           currentCommand += currentText.charAt(charIndex++);
         } else if (isDeleting && charIndex > 0) {
           currentCommand = currentCommand.slice(0, -1);
           charIndex--;
         }
         
-        if (charIndex === currentText.length && !isDeleting) {
-          isDeleting = true;
-          lastTimestamp = timestamp;
-          const id = requestAnimationFrame(type);
-          animationFrameIds.push(id);
-          return;
+        typedSpan.textContent = currentCommand;
+        
+        if (!isDeleting && !isWaiting && charIndex === currentText.length) {
+          isWaiting = true;
+          waitStart = timestamp;
         }
         
         if (isDeleting && charIndex === 0) {
@@ -607,7 +723,6 @@ document.addEventListener('DOMContentLoaded', function() {
           commandIndex = (commandIndex + 1) % commands.length;
         }
         
-        commandElement.innerHTML = currentCommand.replace(/\n/g, '<br>') + '<span class="cursor"></span>';
         lastTimestamp = timestamp;
       }
       
