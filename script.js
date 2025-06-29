@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ======================== INITIALIZATION ========================
   function initialize() {
+    if (window.innerWidth <= 450) {
+        document.querySelector('.gnome-bar').style.display = 'none';
+      }
+    
     ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
     initTheme();
     
@@ -119,19 +123,31 @@ document.addEventListener('DOMContentLoaded', function() {
   function toggleMaximize() {
     const gnomeBarHeight = 40;
     const gnomeBarOffset = 5;
+    const isMobile = window.innerWidth <= 450;
 
     if (!state.isMaximized) {
       terminalContainer.classList.add('maximized');
-      Object.assign(terminalContainer.style, {
-        width: '100vw',
-        height: `calc(100vh - ${gnomeBarHeight + gnomeBarOffset}px)`,
-        maxWidth: '100%',
-        borderRadius: '0',
-        position: 'fixed',
-        top: `${gnomeBarHeight}px`,
-        left: '0',
-        zIndex: '1000'
-      });
+      if (isMobile) {
+        Object.assign(terminalContainer.style, {
+          width: '100vw',
+          height: '100vh',
+          borderRadius: '0',
+          position: 'fixed',
+          top: '0',
+          left: '0'
+        });
+      } else {
+        Object.assign(terminalContainer.style, {
+          width: '100vw',
+          height: `calc(100vh - ${gnomeBarHeight + gnomeBarOffset}px)`,
+          maxWidth: '100%',
+          borderRadius: '0',
+          position: 'fixed',
+          top: `${gnomeBarHeight}px`,
+          left: '0',
+          zIndex: '1000'
+        });
+      }
     } else {
       terminalContainer.classList.remove('maximized');
       Object.assign(terminalContainer.style, {
@@ -232,6 +248,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ======================== TERMINAL CONTENT ========================
   function createTerminalInputHTML() {
+    return state.currentLanguage === 'vi' 
+      ? createTerminalInputHTML_vi() 
+      : createTerminalInputHTML_en();
+  }
+
+  function createTerminalInputHTML_vi() {
     return `
       <div class="content-section active" id="empty-content">
         <div class="output">
@@ -246,13 +268,37 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="input-container">
               <span class="input-prompt"></span>
-              <input type="text" class="terminal-input" placeholder="cd profile/" autofocus>
+              <input type="text" class="terminal-input" placeholder="cd profile/ hoặc help" autofocus>
               <span class="custom-cursor"></span>
             </div>
           </div>
           <div class="command-output"></div>
         </div>
       </div>`;
+  }
+
+  function createTerminalInputHTML_en() {
+  return `
+    <div class="content-section active" id="empty-content">
+      <div class="output">
+        <div class="output-line">
+          <div class="zsh-unified">
+            <span class="zsh-icon manjaro-icon-bg">
+              <i class="nf nf-linux-manjaro"></i>
+            </span>
+            <span class="zsh-file manjaro-file-bg">
+              <i class="nf nf-fa-home"></i>~
+            </span>
+          </div>
+          <div class="input-container">
+            <span class="input-prompt"></span>
+            <input type="text" class="terminal-input" placeholder="cd profile/ or help" autofocus>
+            <span class="custom-cursor"></span>
+          </div>
+        </div>
+        <div class="command-output"></div>
+      </div>
+    </div>`;
   }
 
   function handleTerminalInput(event) {
@@ -398,17 +444,9 @@ document.addEventListener('DOMContentLoaded', function() {
       animationFrameIds.push(id);
     }
     else if (command === 'help') {
-      outputDiv.innerHTML = `<div class="help-output">
-        <strong>Available Commands:</strong>
-        <ul>
-          <li><code>cd</code> - Change directory</li>
-          <li><code>ls</code> - List files</li>
-          <li><code>clear</code> - Clear the terminal</li>
-          <li><code>neofetch</code> - Display system information</li>
-          <li><code>python --version</code> - Show Python version</li>
-          <li><code>help</code> - Show this help message</li>
-        </ul>
-      </div>`;
+      outputDiv.innerHTML = state.currentLanguage === 'vi'
+        ? helpOutputVi()
+        : helpOutputEn();
     }
     else {
       outputDiv.innerHTML += `<div class="error">Command not found: ${command}</div>`;
@@ -417,6 +455,34 @@ document.addEventListener('DOMContentLoaded', function() {
     input.value = '';
     content.scrollTop = content.scrollHeight;
     input.focus();
+  }
+
+  function helpOutputVi() {
+    return `<div class="help-output">
+      <strong>Các lệnh có thể dùng:</strong>
+      <ul>
+        <li><code>cd</code> - Chuyển thư mục</li>
+        <li><code>ls</code> - Liệt kê file/thư mục</li>
+        <li><code>clear</code> - Xóa màn hình terminal</li>
+        <li><code>neofetch</code> - Hiện thông tin hệ thống</li>
+        <li><code>python --version</code> - Xem phiên bản Python</li>
+        <li><code>help</code> - Hiện hướng dẫn này</li>
+      </ul>
+    </div>`;
+  }
+
+  function helpOutputEn() {
+    return `<div class="help-output">
+      <strong>Available Commands:</strong>
+      <ul>
+        <li><code>cd</code> - Change directory</li>
+        <li><code>ls</code> - List files</li>
+        <li><code>clear</code> - Clear the terminal</li>
+        <li><code>neofetch</code> - Display system information</li>
+        <li><code>python --version</code> - Show Python version</li>
+        <li><code>help</code> - Show this help message</li>
+      </ul>
+    </div>`;
   }
 
   // ======================== UI HELPERS ========================
@@ -569,6 +635,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const languageIcon = document.querySelector('.language-toggle .language-icon');
     if (languageIcon) languageIcon.textContent = lang;
+
+    if (state.isClosed || state.isMinimized) return;
+    if (content.querySelector('#empty-content')) {
+      content.innerHTML = createTerminalInputHTML();
+      const input = content.querySelector('.terminal-input');
+      if (input) {
+        setupCursor(input);
+        input.addEventListener('keydown', handleTerminalInput);
+        input.focus();
+      }
+    }
 
     startTypingAll();
   }

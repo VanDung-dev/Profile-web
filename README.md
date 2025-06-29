@@ -9,6 +9,9 @@
 Dự án **Profile-web** là một **hồ sơ cá nhân** (personal profile) được thiết kế theo phong cách **terminal Gnome trên hệ điều hành Manjaro Linux**. Giao diện mô phỏng dòng lệnh thực tế, đi kèm hiệu ứng hoạt họa, tab nội dung động, đa ngôn ngữ và khả năng tương tác, giúp bạn tiếp cận người xem bằng một phong cách kỹ thuật và độc đáo.
 
 ---
+![Demo](images/demo.png)
+
+---
 
 ## 🧑‍💻 Mục tiêu
 
@@ -91,8 +94,8 @@ Dự án này được phát hành dưới **giấy phép tùy chỉnh cho hồ 
 - **LinkedIn**: [dung-nguyen](https://www.linkedin.com/in/dung-nguyen-211bab348/)
 
 ---
-## Lưu ý:
-> Hiện tại giao diện web có thể sẽ bị lỗi đối với `mobile`
+## ❗️ Lưu ý:
+- Hiện tại giao diện web có thể sẽ bị lỗi đối với `mobile`
 ---
 
 > Nếu bạn thấy dự án này hữu ích hoặc truyền cảm hứng, hãy ⭐ trên GitHub hoặc chia sẻ với cộng đồng nhé!
