@@ -832,7 +832,6 @@ body {
   margin: 0;
   position: relative;
   z-index: 2;
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .terminal-input::selection {
@@ -845,7 +844,6 @@ body {
   display: inline-flex;
   align-items: center;
   margin-left: -60px;
-  width: calc(100% + 60px);
 }
 
 .custom-cursor {
@@ -975,7 +973,10 @@ img.lazy-load.loaded {
   .title { font-size: 18px; }
   .skills { margin-top: 15px; }
   .tab-title { font-size: 10px; }
-  .command { font-size: 12px;}
+  .command,
+  .terminal-input{ 
+    font-size: 12px;
+  }
   .about,
   .project-description,
   .certificate-desc,
