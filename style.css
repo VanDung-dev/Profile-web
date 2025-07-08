@@ -212,7 +212,7 @@ body {
   overflow: hidden;
   box-shadow: 0 0 30px rgba(22, 160, 133, 0.4);
   border: 1px solid #333;
-  transition: transform 0.3s, opacity 0.3s;
+  transition: all 0.15s ease-in-out;
   display: none;
 }
 
@@ -235,10 +235,10 @@ body {
 }
 
 .container.maximized {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100% !important;
-  border-radius: 0 !important;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  border-radius: 0;
   position: fixed;
   top: 0;
   left: 0;
@@ -915,6 +915,13 @@ img.lazy-load.loaded {
     height: 90vh !important;
     border-radius: 12px !important;
   }
+
+  .container.maximized {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+  }
   
   .app-icon {
     width: 50px;
@@ -1028,7 +1035,14 @@ img.lazy-load.loaded {
     height: 90vh !important;
     max-width: 100%;
   }
-  
+
+  .container.maximized {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+  }
+
   .content { padding: 20px; font-size: 15px; }
   
   .zsh-unified {

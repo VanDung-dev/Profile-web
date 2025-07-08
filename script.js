@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
           height: '100vh',
           borderRadius: '0',
           position: 'fixed',
-          top: '0',
-          left: '0'
+          top: 'auto',
+          left: 'auto'
         });
       } else {
         Object.assign(terminalContainer.style, {
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
           borderRadius: '0',
           position: 'fixed',
           top: `${gnomeBarHeight}px`,
-          left: '0',
+          left: 'auto',
           zIndex: '1000'
         });
       }
