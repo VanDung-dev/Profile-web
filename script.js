@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.minimize')?.addEventListener('click', minimizeTerminal);
     document.querySelector('.maximize')?.addEventListener('click', toggleMaximize);
     document.querySelector('.close')?.addEventListener('click', closeTerminal);
+    document.querySelector('.resize-handle')?.addEventListener('mousedown', initResize);
     
     appIcon.addEventListener('click', handleAppIconClick);
 
@@ -187,6 +188,42 @@ document.addEventListener('DOMContentLoaded', function() {
       state.isMinimized = false;
     }, 300);
   }
+
+  // ======================== RESIZE FUNCTIONALITY ========================
+function initResize(e) {
+  e.preventDefault();
+  
+  const terminal = document.querySelector('.container');
+  const startX = e.clientX;
+  const startY = e.clientY;
+  const startWidth = parseInt(document.defaultView.getComputedStyle(terminal).width, 10);
+  const startHeight = parseInt(document.defaultView.getComputedStyle(terminal).height, 10);
+  
+  function resize(e) {
+    const newWidth = startWidth + (e.clientX - startX);
+    const newHeight = startHeight + (e.clientY - startY);
+    
+    // Giới hạn kích thước tối thiểu
+    const minWidth = 400;
+    const minHeight = 300;
+    
+    if (newWidth >= minWidth) {
+      terminal.style.width = `${newWidth}px`;
+    }
+    
+    if (newHeight >= minHeight) {
+      terminal.style.height = `${newHeight}px`;
+    }
+  }
+  
+  function stopResize() {
+    document.removeEventListener('mousemove', resize);
+    document.removeEventListener('mouseup', stopResize);
+  }
+  
+  document.addEventListener('mousemove', resize);
+  document.addEventListener('mouseup', stopResize);
+}
 
   // ======================== APP ICON CONTROLS ========================
   function handleAppIconClick() {
