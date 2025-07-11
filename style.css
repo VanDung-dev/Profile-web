@@ -9,9 +9,6 @@
   --text-light: #f0f0f0;
   --text-soft: #ddd;
   --card-bg: rgba(68, 71, 90, 0.2);
-  --common-transition: transform 0.3s, box-shadow 0.3s;
-  --common-hover-effect: transform: scale(1.02); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  --flex-center: display: flex; align-items: center;
 }
 
 /* ======================== RESET & BASE ======================== */
@@ -45,7 +42,7 @@ body {
   gap: 12px;
   z-index: 10000;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  display: none;
+  /*display: none;*/
   flex-wrap: wrap;
   max-width: 300px;
   justify-content: center;
@@ -210,7 +207,6 @@ body {
   height: 80vh;
   background: var(--terminal-bg);
   border-radius: 12px;
-  /* overflow: hidden; */
   overflow: visible;
   box-shadow: 0 0 30px rgba(22, 160, 133, 0.4);
   border: 1px solid #333;
@@ -220,7 +216,7 @@ body {
 
 .container-inner {
   border-radius: 12px;
-  overflow: hidden; /* Bo góc nội dung bên trong */
+  overflow: hidden;
   height: 100%;
   width: 100%;
 }
@@ -254,6 +250,20 @@ body {
   z-index: 1000;
 }
 
+.container.dragging {
+  box-shadow: 0 0 30px rgba(22, 160, 133, 0.7);
+  opacity: 0.95;
+  transition: none !important;
+}
+
+.terminal-header {
+  cursor: grab;
+}
+
+.terminal-header:active {
+  cursor: grabbing;
+}
+
 /* ======================== RESIZE HANDLE ======================== */
 .resize-handle {
   position: absolute;
@@ -264,6 +274,12 @@ body {
   background: transparent;
   cursor: se-resize;
   z-index: 1000;
+}
+
+.container.resizing {
+  transition: none !important;
+  user-select: none;
+  pointer-events: none;
 }
 
 .container.maximized .resize-handle {
@@ -282,7 +298,7 @@ body {
   border-right: 5px solid rgba(255,255,255,0.3);
   border-bottom-right-radius: 18px;
   transform: rotate(0deg);
-  pointer-events: auto; /* Cho phép hover */
+  pointer-events: auto;
   transition: 
     border-color 0.2s, 
     border-width 0.2s, 
@@ -293,7 +309,6 @@ body {
   z-index: 1001;
 }
 
-/* Khi hover: đậm màu, to hơn, cong hơn */
 .resize-handle:hover::after {
   border-bottom: 7px solid #fff;
   border-right: 7px solid #fff;
@@ -702,7 +717,7 @@ body {
 
 .skills {
   margin-top: 10px;
-  transition: var(--common-transition);
+  transition: transform 0.3s, box-shadow 0.3s;;
 }
 
 .skill-tag {
@@ -759,7 +774,7 @@ body {
   border-radius: 5px;
   margin-bottom: 25px;
   border-left: 3px solid var(--manjaro-dark-green);
-  transition: var(--common-transition);
+  transition: transform 0.3s, box-shadow 0.3s;;
   margin-top: 20px;
 }
 
@@ -981,6 +996,15 @@ img.lazy-load.loaded {
     max-width: 100% !important;
     border-radius: 0 !important;
   }
+
+  .terminal-header {
+    cursor: default !important;
+  }
+
+  .container.dragging {
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
   
   .app-icon {
     width: 50px;
@@ -1103,6 +1127,15 @@ img.lazy-load.loaded {
   }
 
   .content { padding: 20px; font-size: 15px; }
+
+  .terminal-header {
+    cursor: default !important;
+  }
+
+  .container.dragging {
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
   
   .zsh-unified {
     height: 21.4px;

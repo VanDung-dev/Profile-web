@@ -69,6 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.maximize')?.addEventListener('click', toggleMaximize);
     document.querySelector('.close')?.addEventListener('click', closeTerminal);
     document.querySelector('.resize-handle')?.addEventListener('mousedown', initResize);
+
+    if (!isMobileDevice()) {
+      document.querySelector('.terminal-header').addEventListener('mousedown', startDrag);
+    }
     
     appIcon.addEventListener('click', handleAppIconClick);
 
@@ -190,40 +194,44 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ======================== RESIZE FUNCTIONALITY ========================
-function initResize(e) {
-  e.preventDefault();
-  
-  const terminal = document.querySelector('.container');
-  const startX = e.clientX;
-  const startY = e.clientY;
-  const startWidth = parseInt(document.defaultView.getComputedStyle(terminal).width, 10);
-  const startHeight = parseInt(document.defaultView.getComputedStyle(terminal).height, 10);
-  
-  function resize(e) {
-    const newWidth = startWidth + (e.clientX - startX);
-    const newHeight = startHeight + (e.clientY - startY);
-    
-    // Giới hạn kích thước tối thiểu
-    const minWidth = 400;
-    const minHeight = 300;
-    
-    if (newWidth >= minWidth) {
-      terminal.style.width = `${newWidth}px`;
+  function initResize(e) {
+    e.preventDefault();
+
+    // Thêm class resizing khi bắt đầu thay đổi kích thước
+    terminalContainer.classList.add('resizing');
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = parseInt(document.defaultView.getComputedStyle(terminalContainer).width, 10);
+    const startHeight = parseInt(document.defaultView.getComputedStyle(terminalContainer).height, 10);
+
+    function resize(e) {
+      const newWidth = startWidth + (e.clientX - startX);
+      const newHeight = startHeight + (e.clientY - startY);
+
+      // Giới hạn kích thước tối thiểu
+      const minWidth = 400;
+      const minHeight = 300;
+
+      if (newWidth >= minWidth) {
+        terminalContainer.style.width = `${newWidth}px`;
+      }
+
+      if (newHeight >= minHeight) {
+        terminalContainer.style.height = `${newHeight}px`;
+      }
     }
-    
-    if (newHeight >= minHeight) {
-      terminal.style.height = `${newHeight}px`;
+
+    function stopResize() {
+      // Xóa class resizing khi kết thúc thay đổi kích thước
+      terminalContainer.classList.remove('resizing');
+      document.removeEventListener('mousemove', resize);
+      document.removeEventListener('mouseup', stopResize);
     }
+
+    document.addEventListener('mousemove', resize);
+    document.addEventListener('mouseup', stopResize);
   }
-  
-  function stopResize() {
-    document.removeEventListener('mousemove', resize);
-    document.removeEventListener('mouseup', stopResize);
-  }
-  
-  document.addEventListener('mousemove', resize);
-  document.addEventListener('mouseup', stopResize);
-}
 
   // ======================== APP ICON CONTROLS ========================
   function handleAppIconClick() {
@@ -908,6 +916,67 @@ function initResize(e) {
         option.classList.add('active');
       }
     });
+  }
+
+  // ======================== DRAG FUNCTIONALITY ========================
+  let isDragging = false;
+  let dragStartX, dragStartY;
+  let initialContainerLeft, initialContainerTop;
+
+  // Hàm kiểm tra thiết bị có phải là mobile/tablet không
+  function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") ||
+        (navigator.userAgent.indexOf('IEMobile') !== -1) ||
+        (window.innerWidth <= 1024);
+  }
+
+  function startDrag(e) {
+    // Không kéo thả trên thiết bị di động
+    if (isMobileDevice()) return;
+
+    if (state.isMaximized) return;
+
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+
+    const rect = terminalContainer.getBoundingClientRect();
+    initialContainerLeft = rect.left;
+    initialContainerTop = rect.top;
+
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', stopDrag);
+
+    terminalContainer.style.cursor = 'grabbing';
+    terminalContainer.style.userSelect = 'none';
+  }
+
+  function onDrag(e) {
+    if (!isDragging) return;
+
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+
+    const newLeft = initialContainerLeft + dx;
+    const newTop = initialContainerTop + dy;
+
+    terminalContainer.style.left = `${newLeft}px`;
+    terminalContainer.style.top = `${newTop}px`;
+    terminalContainer.style.position = 'fixed';
+    terminalContainer.style.margin = '0';
+    if (!terminalContainer.classList.contains('dragging')) {
+      terminalContainer.classList.add('dragging');
+    }
+  }
+
+  function stopDrag() {
+    isDragging = false;
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('mouseup', stopDrag);
+
+    terminalContainer.style.cursor = '';
+    terminalContainer.style.userSelect = '';
+    terminalContainer.classList.remove('dragging');
   }
 
   // ======================== START APPLICATION ========================
