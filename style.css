@@ -234,8 +234,6 @@ body {
 }
 
 .container.restore {
-  transform: scale(0.1);
-  opacity: 0;
   animation: restoreTerminal 0.1s ease forwards;
 }
 
@@ -284,6 +282,19 @@ body {
 
 .container.maximized .resize-handle {
   display: none;
+}
+
+.container, .tab, .skill-tag, .project, .certificate, .contact-card {
+  will-change: transform, opacity;
+}
+
+/* Tắt will-change sau khi animation kết thúc */
+.container.restore {
+  will-change: transform, opacity;
+}
+
+.container:not(.restore) {
+  will-change: auto;
 }
 
 .resize-handle::after {
@@ -390,6 +401,9 @@ body {
   gap: 12px;
   border: 1px solid rgba(255, 255, 255, 0.75);
   transition: transform 0.3s ease;
+  transform-style: preserve-3d;
+backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .dock.hidden {
@@ -404,6 +418,8 @@ body {
   margin: auto;
   transition: transform 0.2s, background 0.2s;
   transform-origin: bottom;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .dock-icon:hover {
@@ -436,7 +452,7 @@ body {
   font-size: 16px;
   color: var(--text-soft);
   font-weight: bold;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   pointer-events: none;
 }
 
@@ -535,6 +551,10 @@ body {
   background: #333;
 }
 
+.tab, .skill-tag, .project, .certificate, .contact-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
 .content {
   height: calc(100% - 40px - 45px);
   overflow-y: auto;
@@ -570,22 +590,11 @@ body {
 }
 
 .cursor {
-  display: inline-block;
-  width: 8px;
-  height: 1.2em;
-  background-color: #fff;
   animation: blink 1s infinite;
-  vertical-align: middle;
-  margin-left: 2px;
 }
 
 .cursor.waiting {
   animation:  blink 1s infinite;;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 
 .output {
@@ -619,10 +628,10 @@ body {
 .zsh-unified {
   display: flex;
   align-items: stretch;
-  height: 28.5px;
+  height: 29px;
   min-width: 165px;
-  max-width: 262.5px;
-  margin-right: 7.5px;
+  max-width: 263px;
+  margin-right: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
@@ -631,30 +640,30 @@ body {
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 13.5px;
-  padding: 0 13.5px;
+  font-size: 14px;
+  padding: 0 14px;
 }
 
 .manjaro-icon-bg {
   background: #fff;
   color: var(--manjaro-dark-green);
-  border-radius: 7.5px 0 0 7.5px;
+  border-radius: 8px 0 0 8px;
   width: 36px;
   min-width: 36px;
   justify-content: center;
-  font-size: 16.5px;
+  font-size: 17px;
   padding: 0;
 }
 
 .manjaro-file-bg {
   background: var(--manjaro-dark-green);
   color: #fff;
-  border-radius: 0 7.5px 7.5px 0;
+  border-radius: 0 8px 8px 0;
   flex: 1;
 }
 
 .manjaro-file-bg i {
-  margin-right: 4.5px;
+  margin-right: 5px;
   color: #fff;
 }
 
@@ -939,8 +948,8 @@ body {
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.25; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .error {
@@ -1018,30 +1027,30 @@ img.lazy-load.loaded {
   .terminal-header { padding: 0 8px; gap: 5px; }
   
   .zsh-unified {
-    height: 14.25px;
-    min-width: 82.5px;
+    height: 14px;
+    min-width: 83px;
     max-width: 160px;
-    margin-right: 3.75px;
+    margin-right: 4px;
   }
   
   .manjaro-icon-bg,
   .manjaro-file-bg {
-    font-size: 6.75px;
-    padding: 0 6.75px;
+    font-size: 7px;
+    padding: 0 7px;
   }
   
   .manjaro-icon-bg {
-    border-radius: 3.75px 0 0 3.75px;
+    border-radius: 4px 0 0 4px;
     width: 18px;
     min-width: 18px;
-    font-size: 8.25px;
+    font-size: 8px;
   }
   
   .manjaro-file-bg {
-    border-radius: 0 3.75px 3.75px 0;
+    border-radius: 0 4px 4px 0;
   }
   
-  .manjaro-file-bg i { margin-right: 2.25px; }
+  .manjaro-file-bg i { margin-right: 2px; }
   .container-title { font-size: 12px; left: 45%; }
   .terminal-buttons .btn { width: 20px; height: 20px; font-size: 16px; }
   .content { padding: 15px; font-size: 14px; }
@@ -1138,27 +1147,27 @@ img.lazy-load.loaded {
   }
   
   .zsh-unified {
-    height: 21.4px;
-    min-width: 123.75px;
-    max-width: 196.9px;
-    margin-right: 5.6px;
+    height: 21px;
+    min-width: 124px;
+    max-width: 197px;
+    margin-right: 6px;
   }
   
   .manjaro-icon-bg,
   .manjaro-file-bg {
-    font-size: 10.1px;
-    padding: 0 10.1px;
+    font-size: 10px;
+    padding: 0 10px;
   }
   
   .manjaro-icon-bg {
-    border-radius: 5.6px 0 0 5.6px;
+    border-radius: 6px 0 0 6px;
     width: 27px;
     min-width: 27px;
-    font-size: 12.4px;
+    font-size: 12px;
   }
   
-  .manjaro-file-bg { border-radius: 0 5.6px 5.6px 0; }
-  .manjaro-file-bg i { margin-right: 3.4px; }
+  .manjaro-file-bg { border-radius: 0 6px 6px 0; }
+  .manjaro-file-bg i { margin-right: 3px; }
   
   .profile-header {
     flex-direction: column;
