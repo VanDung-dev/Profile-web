@@ -86,8 +86,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     themeSelector?.addEventListener('click', toggleThemePopup);
 
-    dockGithub?.addEventListener('click', () => {
-      window.open('https://github.com/VanDung-dev', '_blank');
+    dockGithub?.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open('https://github.com/VanDung-dev', '_blank', 'noopener,noreferrer');
+    });
+
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (link.target !== '_blank') {
+          e.preventDefault();
+          window.open(link.href, '_blank', 'noopener,noreferrer');
+        }
+      });
     });
   }
 
@@ -321,6 +331,27 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ======================== TERMINAL CONTENT ========================
+  function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+  }
+
+  function isValidCommand(command) {
+    // Chỉ cho phép các ký tự an toàn
+    const safeChars = /^[a-zA-Z0-9\s\-_\/\.\?\&\=\+\*\@\#\!\,:;'"\(\)\{\}\[\]\^\$\|~`]+$/;
+    return safeChars.test(command) && command.length <= 100;
+  }
+
+  function handleError(error, context = '') {
+    console.error(`Error${context ? ` in ${context}` : ''}:`, error);
+  }
+
+
   function createTerminalInputHTML() {
     return state.currentLanguage === 'vi' 
       ? createTerminalInputHTML_vi() 
@@ -376,164 +407,169 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function handleTerminalInput(event) {
-    if (event.key !== 'Enter') return;
-    
-    const input = event.target;
-    const command = input.value.trim();
-    const outputDiv = content.querySelector('.command-output');
-    
-    if (!command) return;
-    
-    if (command === 'cd profile/') {
-      content.innerHTML = state.originalContent;
-      tabsContainer.style.display = 'flex';
-      ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
+    try {
+      if (event.key !== 'Enter') return;
 
-      initLazyLoading();
-      
-      const firstTab = document.querySelector('.tab');
-      if (firstTab) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        firstTab.classList.add('active');
-        
-        document.querySelectorAll('.content-section').forEach(section => {
-          section.classList.remove('active');
-        });
-        
-        const section = document.querySelector('.content-section');
-        if (section) {
-          section.classList.add('active');
-          startTypingAll();
-        }
+      const input = event.target;
+      const command = input.value.trim();
+      const outputDiv = content.querySelector('.command-output');
+
+      if (!command) return;
+      if (!isValidCommand(command)) {
+        outputDiv.innerHTML += `<div class="error">Invalid command: contains unsafe characters</div>`;
+        input.value = '';
+        return;
       }
-    } 
-    else if (command === 'neofetch') {
-      outputDiv.innerHTML = `
-        <div class="neofetch-output">
-  ██████████████████  ████████  VanDung-devg@manjaro 
-  ██████████████████  ████████  ----------------- 
-  ██████████████████  ████████  OS: Manjaro Linux x86_64 
-  ██████████████████  ████████  Host: ASUS TUF Gaming A16 FA617NS
-  ████████            ████████  Kernel: 6.12.3-1-MANJARO 
-  ████████  ████████  ████████  Uptime: 1 hour, 54 mins 
-  ████████  ████████  ████████  Packages: 1495 (pacman), 8 (flatpak) 
-  ████████  ████████  ████████  Shell: zsh 5.9 
-  ████████  ████████  ████████  Resolution: 1920x1080 
-  ████████  ████████  ████████  DE: GNOME 48.2 
-  ████████  ████████  ████████  WM: Mutter 
-  ████████  ████████  ████████  WM Theme: Adwaita 
-  ████████  ████████  ████████  Theme: adw-gtk3-dark [GTK2/3] 
-  ████████  ████████  ████████  Icons: Papirus-Dark-Maia [GTK2/3] 
-                                Terminal: gnome-terminal 
-                                CPU: AMD Ryzen 7 7735HS with Radeon Graphics (16) @ 4.829GHz 
-                                GPU: AMD ATI Radeon 680M 
-                                GPU: AMD ATI Radeon RX 7600/7600 XT/7600M XT/7600S/7700S / PRO W7600 
-                                Memory: 10969MiB / 31328MiB 
-        </div>`;
-    }
-    else if (command === 'ls' || command === 'ls -la') {
-      outputDiv.innerHTML = `
-      <div class="ls-output">
-        .bashrc
-        .profile
-        .bash_logout
-        Documents
-        Downloads
-        Music
-        Pictures
-        Videos
-      </div>`;
-    }
-    else if (command === 'clear') {
-      outputDiv.innerHTML = '';
-    }
-    else if (command === 'python --version') {
-      outputDiv.innerHTML = `<div class="python-version-output">Python 3.12.3</div>`;
-    }
-    else if (command === 'git status') {
-      outputDiv.innerHTML = `
-      <div class="git-status-output">
-      On branch main<br>
-      Your branch is up to date with 'origin/main'.<br>
-      No changes to commit, working tree clean.
-      </div>`;
-    }
-    else if (command === 'sudo pacman -Syu') {
-      outputDiv.innerHTML = `<div class="updating-output" id="updating-output"></div>`;
-      const updateLines = [
-        '[sudo] password for VanDung-dev: ********',
-        ':: Synchronizing package databases...',
-        ' core downloading...',
-        ' extra downloading...',
-        ' community downloading...',
-        ' multilib downloading...',
-        ':: Starting full system upgrade...',
-        ' resolving dependencies...',
-        ' looking for conflicting packages...',
-        ' Packages (5) linux-6.12.34  python-3.12.9  zsh-5.9.1  nano-7.2  git-2.44.0',
-        '',
-        'Total Download Size:    120.00 MiB',
-        'Total Installed Size:   500.00 MiB',
-        '',
-        ':: Proceed with installation? [Y/n] y',
-        ' downloading packages...',
-        ' checking keys in keyring...',
-        ' checking package integrity...',
-        ' loading package files...',
-        ' checking for file conflicts...',
-        ' checking available disk space...',
-        ' installing linux...',
-        ' installing python...',
-        ' installing zsh...',
-        ' installing nano...',
-        ' installing git...',
-        '',
-        ':: Running post-transaction hooks...',
-        ' Updating icon theme caches...',
-        ' Arming ConditionNeedsUpdate...',
-        ' Updating the desktop file MIME type cache...',
-        '',
-        'System updated successfully!'
-      ];
-      let idx = 0;
-      let lastUpdate = 0;
-      
-      function printNextLine(timestamp) {
-        if (!lastUpdate) lastUpdate = timestamp;
-        const elapsed = timestamp - lastUpdate;
-        const minDelay = 200;
-        const maxDelay = 500;
-        const delay = minDelay + Math.random() * (maxDelay - minDelay);
-        
-        if (elapsed >= delay) {
-          const output = document.getElementById('updating-output');
-          if (!output) return;
-          output.innerHTML += updateLines[idx] + '<br>';
-          idx++;
-          lastUpdate = timestamp;
-        }
-        
-        if (idx < updateLines.length) {
+      try {
+        if (command === 'cd profile/') {
+          content.innerHTML = state.originalContent;
+          tabsContainer.style.display = 'flex';
+          ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
+
+          initLazyLoading();
+
+          const firstTab = document.querySelector('.tab');
+          if (firstTab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            firstTab.classList.add('active');
+
+            document.querySelectorAll('.content-section').forEach(section => {
+              section.classList.remove('active');
+            });
+
+            const section = document.querySelector('.content-section');
+            if (section) {
+              section.classList.add('active');
+              startTypingAll();
+            }
+          }
+        } else if (command === 'neofetch') {
+          outputDiv.innerHTML = `
+            <div class="neofetch-output">
+      ██████████████████  ████████  VanDung-devg@manjaro 
+      ██████████████████  ████████  ----------------- 
+      ██████████████████  ████████  OS: Manjaro Linux x86_64 
+      ██████████████████  ████████  Host: ASUS TUF Gaming A16 FA617NS
+      ████████            ████████  Kernel: 6.12.3-1-MANJARO 
+      ████████  ████████  ████████  Uptime: 1 hour, 54 mins 
+      ████████  ████████  ████████  Packages: 1495 (pacman), 8 (flatpak) 
+      ████████  ████████  ████████  Shell: zsh 5.9 
+      ████████  ████████  ████████  Resolution: 1920x1080 
+      ████████  ████████  ████████  DE: GNOME 48.2 
+      ████████  ████████  ████████  WM: Mutter 
+      ████████  ████████  ████████  WM Theme: Adwaita 
+      ████████  ████████  ████████  Theme: adw-gtk3-dark [GTK2/3] 
+      ████████  ████████  ████████  Icons: Papirus-Dark-Maia [GTK2/3] 
+                                    Terminal: gnome-terminal 
+                                    CPU: AMD Ryzen 7 7735HS with Radeon Graphics (16) @ 4.829GHz 
+                                    GPU: AMD ATI Radeon 680M 
+                                    GPU: AMD ATI Radeon RX 7600/7600 XT/7600M XT/7600S/7700S / PRO W7600 
+                                    Memory: 10969MiB / 31328MiB 
+            </div>`;
+        } else if (command === 'ls' || command === 'ls -la') {
+          outputDiv.innerHTML = `
+          <div class="ls-output">
+            .bashrc
+            .profile
+            .bash_logout
+            Documents
+            Downloads
+            Music
+            Pictures
+            Videos
+          </div>`;
+        } else if (command === 'clear') {
+          outputDiv.innerHTML = '';
+        } else if (command === 'python --version') {
+          outputDiv.innerHTML = `<div class="python-version-output">Python 3.12.3</div>`;
+        } else if (command === 'git status') {
+          outputDiv.innerHTML = `
+          <div class="git-status-output">
+          On branch main<br>
+          Your branch is up to date with 'origin/main'.<br>
+          No changes to commit, working tree clean.
+          </div>`;
+        } else if (command === 'sudo pacman -Syu') {
+          outputDiv.innerHTML = `<div class="updating-output" id="updating-output"></div>`;
+          const updateLines = [
+            '[sudo] password for VanDung-dev: ********',
+            ':: Synchronizing package databases...',
+            ' core downloading...',
+            ' extra downloading...',
+            ' community downloading...',
+            ' multilib downloading...',
+            ':: Starting full system upgrade...',
+            ' resolving dependencies...',
+            ' looking for conflicting packages...',
+            ' Packages (5) linux-6.12.34  python-3.12.9  zsh-5.9.1  nano-7.2  git-2.44.0',
+            '',
+            'Total Download Size:    120.00 MiB',
+            'Total Installed Size:   500.00 MiB',
+            '',
+            ':: Proceed with installation? [Y/n] y',
+            ' downloading packages...',
+            ' checking keys in keyring...',
+            ' checking package integrity...',
+            ' loading package files...',
+            ' checking for file conflicts...',
+            ' checking available disk space...',
+            ' installing linux...',
+            ' installing python...',
+            ' installing zsh...',
+            ' installing nano...',
+            ' installing git...',
+            '',
+            ':: Running post-transaction hooks...',
+            ' Updating icon theme caches...',
+            ' Arming ConditionNeedsUpdate...',
+            ' Updating the desktop file MIME type cache...',
+            '',
+            'System updated successfully!'
+          ];
+          let idx = 0;
+          let lastUpdate = 0;
+
+          function printNextLine(timestamp) {
+            if (!lastUpdate) lastUpdate = timestamp;
+            const elapsed = timestamp - lastUpdate;
+            const minDelay = 200;
+            const maxDelay = 500;
+            const delay = minDelay + Math.random() * (maxDelay - minDelay);
+
+            if (elapsed >= delay) {
+              const output = document.getElementById('updating-output');
+              if (!output) return;
+              output.innerHTML += updateLines[idx] + '<br>';
+              idx++;
+              lastUpdate = timestamp;
+            }
+
+            if (idx < updateLines.length) {
+              const id = requestAnimationFrame(printNextLine);
+              animationFrameIds.push(id);
+            }
+          }
+
           const id = requestAnimationFrame(printNextLine);
           animationFrameIds.push(id);
+        } else if (command === 'help') {
+          outputDiv.innerHTML = state.currentLanguage === 'vi'
+              ? helpOutputVi()
+              : helpOutputEn();
+        } else {
+          outputDiv.innerHTML += `<div class="error">Command not found: ${escapeHtml(command)}</div>`;
         }
+      } catch (error) {
+        handleError(error, `executing command: ${command}`);
+        outputDiv.innerHTML += `<div class="error">Error executing command: ${escapeHtml(command)}</div>`;
       }
-      
-      const id = requestAnimationFrame(printNextLine);
-      animationFrameIds.push(id);
+
+      input.value = '';
+      content.scrollTop = content.scrollHeight;
+      input.focus();
+    } catch (error) {
+      handleError(error, 'terminal input handler');
     }
-    else if (command === 'help') {
-      outputDiv.innerHTML = state.currentLanguage === 'vi'
-        ? helpOutputVi()
-        : helpOutputEn();
-    }
-    else {
-      outputDiv.innerHTML += `<div class="error">Command not found: ${command}</div>`;
-    }
-    
-    input.value = '';
-    content.scrollTop = content.scrollHeight;
-    input.focus();
   }
 
   function helpOutputVi() {
