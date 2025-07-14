@@ -288,7 +288,6 @@ body {
   will-change: transform, opacity;
 }
 
-/* Tắt will-change sau khi animation kết thúc */
 .container.restore {
   will-change: transform, opacity;
 }
