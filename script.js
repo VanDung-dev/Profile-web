@@ -243,6 +243,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('mouseup', stopResize);
   }
 
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
+
+  window.addEventListener('resize', debounce(function() {
+    if (window.innerWidth <= 450) {
+      document.querySelector('.gnome-bar').style.display = 'none';
+    } else {
+      document.querySelector('.gnome-bar').style.display = 'flex';
+    }
+  }, 100));
+
   function throttle(func, limit) {
     let lastFunc;
     let lastRan;
@@ -469,14 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (command === 'ls' || command === 'ls -la') {
           outputDiv.innerHTML = `
           <div class="ls-output">
-            .bashrc
-            .profile
-            .bash_logout
-            Documents
-            Downloads
-            Music
-            Pictures
-            Videos
+            profile
           </div>`;
         } else if (command === 'clear') {
           outputDiv.innerHTML = '';
@@ -576,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return `<div class="help-output">
       <strong>Các lệnh có thể dùng:</strong>
       <ul>
-        <li><code>cd</code> - Chuyển thư mục</li>
+        <li><code>cd profile/</code> - Chuyển thư mục profile</li>
         <li><code>ls</code> - Liệt kê file/thư mục</li>
         <li><code>clear</code> - Xóa màn hình terminal</li>
         <li><code>neofetch</code> - Hiện thông tin hệ thống</li>
@@ -728,19 +739,33 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function handleTabClick() {
+    clearAnimationFrames();
+
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     this.classList.add('active');
-    
+
     document.querySelectorAll('.content-section').forEach(section => {
       section.classList.remove('active');
     });
-    
+
     const tabName = this.getAttribute('data-tab');
     const section = document.getElementById(`${tabName}-content`);
     if (section) {
       section.classList.add('active');
       ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
       startTypingAll();
+    }
+  }
+
+  if (isMobileDevice()) {
+    window.addEventListener('resize', handleMobileKeyboard);
+  }
+
+  function handleMobileKeyboard() {
+    if (window.innerHeight < window.outerHeight * 0.7) {
+      terminalContainer.style.height = `${window.innerHeight - 40}px`;
+    } else {
+      terminalContainer.style.height = '90vh';
     }
   }
 
@@ -764,15 +789,15 @@ document.addEventListener('DOMContentLoaded', function() {
   let animationFrameIds = [];
 
   function clearAnimationFrames() {
-    animationFrameIds.forEach(id => {
-      cancelAnimationFrame(id);
-      // Hủy các animation đang chạy trên các command elements
-      document.querySelectorAll('.command[data-animation-id]').forEach(el => {
-        cancelAnimationFrame(el.dataset.animationId);
-        delete el.dataset.animationId;
-      });
-    });
+    animationFrameIds.forEach(id => {cancelAnimationFrame(id);});
     animationFrameIds = [];
+    document.querySelectorAll('.command[data-animation-id]').forEach(el => {
+      const id = el.dataset.animationId;
+      if (id) {
+        cancelAnimationFrame(id);
+        delete el.dataset.animationId;
+      }
+    });
   }
 
   function startTypingAll() {
