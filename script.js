@@ -359,6 +359,8 @@ document.addEventListener('DOMContentLoaded', function() {
       content.innerHTML = state.originalContent;
       tabsContainer.style.display = 'flex';
       ContainerTitle.textContent = 'VanDung-dev@manjaro: ~/profile';
+
+      initLazyLoading();
       
       const firstTab = document.querySelector('.tab');
       if (firstTab) {
