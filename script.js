@@ -233,6 +233,35 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('mouseup', stopResize);
   }
 
+  function throttle(func, limit) {
+    let lastFunc;
+    let lastRan;
+    return function() {
+      const context = this;
+      const args = arguments;
+      if (!lastRan) {
+        func.apply(context, args);
+        lastRan = Date.now();
+      } else {
+        clearTimeout(lastFunc);
+        lastFunc = setTimeout(function() {
+          if ((Date.now() - lastRan) >= limit) {
+            func.apply(context, args);
+            lastRan = Date.now();
+          }
+        }, limit - (Date.now() - lastRan));
+      }
+    };
+  }
+
+  window.addEventListener('resize', throttle(function() {
+    if (window.innerWidth <= 450) {
+      document.querySelector('.gnome-bar').style.display = 'none';
+    } else {
+      document.querySelector('.gnome-bar').style.display = 'flex';
+    }
+  }, 100));
+
   // ======================== APP ICON CONTROLS ========================
   function handleAppIconClick() {
     if (state.isClosed) openTerminal();
@@ -259,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('keydown', handleTerminalInput);
         input.focus();
       }
-      
+
       state.isClosed = false;
       state.isMinimized = false;
     }, 300);
@@ -651,8 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function updateCursorPosition(input, cursor) {
-    const text = input.value.substring(0, input.selectionStart);
-    tempSpan.textContent = text;
+    tempSpan.textContent = input.value.substring(0, input.selectionStart);
     cursor.style.left = `${tempSpan.offsetWidth}px`;
   }
   
@@ -700,7 +728,14 @@ document.addEventListener('DOMContentLoaded', function() {
   let animationFrameIds = [];
 
   function clearAnimationFrames() {
-    animationFrameIds.forEach(id => cancelAnimationFrame(id));
+    animationFrameIds.forEach(id => {
+      cancelAnimationFrame(id);
+      // Hủy các animation đang chạy trên các command elements
+      document.querySelectorAll('.command[data-animation-id]').forEach(el => {
+        cancelAnimationFrame(el.dataset.animationId);
+        delete el.dataset.animationId;
+      });
+    });
     animationFrameIds = [];
   }
 
@@ -723,62 +758,63 @@ document.addEventListener('DOMContentLoaded', function() {
     let isWaiting = false;
     let waitStart = 0;
     let lastTimestamp = 0;
+    let animationFrameId = null;
 
     commandElement.innerHTML = `<span class="typed"></span><span class="cursor"></span>`;
     const typedSpan = commandElement.querySelector('.typed');
-    
+
     function type(timestamp) {
       if (!lastTimestamp) lastTimestamp = timestamp;
-      
+
       if (isWaiting) {
-        typedSpan.textContent = currentCommand;
-        
-        if (timestamp - waitStart >= 3000) {
+        if (timestamp - waitStart >= 2000) { // Giảm thời gian chờ từ 3s xuống 2s
           isWaiting = false;
           isDeleting = true;
           lastTimestamp = timestamp;
-        } else {
-          const id = requestAnimationFrame(type);
-          animationFrameIds.push(id);
-          return;
         }
+        animationFrameId = requestAnimationFrame(type);
+        return;
       }
-      
+
       const elapsed = timestamp - lastTimestamp;
       const typingSpeed = isDeleting ? 30 : 80 + Math.random() * 50;
-      
+
       if (elapsed >= typingSpeed) {
         const currentText = commands[commandIndex];
         if (!currentText) return;
-        
+
         if (!isDeleting && !isWaiting && charIndex < currentText.length) {
           currentCommand += currentText.charAt(charIndex++);
         } else if (isDeleting && charIndex > 0) {
           currentCommand = currentCommand.slice(0, -1);
           charIndex--;
         }
-        
+
         typedSpan.textContent = currentCommand;
-        
+
         if (!isDeleting && !isWaiting && charIndex === currentText.length) {
           isWaiting = true;
           waitStart = timestamp;
         }
-        
+
         if (isDeleting && charIndex === 0) {
           isDeleting = false;
           commandIndex = (commandIndex + 1) % commands.length;
         }
-        
+
         lastTimestamp = timestamp;
       }
-      
-      const id = requestAnimationFrame(type);
-      animationFrameIds.push(id);
+
+      animationFrameId = requestAnimationFrame(type);
     }
-    
-    const id = requestAnimationFrame(type);
-    animationFrameIds.push(id);
+
+    // Hủy animation cũ nếu có
+    if (commandElement.dataset.animationId) {
+      cancelAnimationFrame(commandElement.dataset.animationId);
+    }
+
+    animationFrameId = requestAnimationFrame(type);
+    commandElement.dataset.animationId = animationFrameId;
   }
 
   // ======================== LANGUAGE MANAGEMENT ========================
@@ -836,26 +872,39 @@ document.addEventListener('DOMContentLoaded', function() {
   // ======================== LAZY LOADING ========================
   function initLazyLoading() {
     const lazyImages = document.querySelectorAll('img.lazy-load');
-    
-    const lazyLoad = (target) => {
-      const io = new IntersectionObserver((entries, observer) => {
+
+    if ('IntersectionObserver' in window) {
+      const lazyImageObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target;
-            img.src = img.dataset.src;
-            img.onload = () => {
-              img.classList.add('loaded');
-            };
-            img.classList.remove('lazy-load');
-            observer.unobserve(img);
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.onload = () => {
+                img.classList.add('loaded');
+              };
+              img.classList.remove('lazy-load');
+              lazyImageObserver.unobserve(img);
+            }
           }
         });
+      }, {
+        rootMargin: '100px 0px', // Load ảnh trước khi chúng xuất hiện 100px
+        threshold: 0.01
       });
-      
-      io.observe(target);
-    };
-    
-    lazyImages.forEach(lazyLoad);
+
+      lazyImages.forEach(img => {
+        lazyImageObserver.observe(img);
+      });
+    } else {
+      // Fallback cho trình duyệt không hỗ trợ IntersectionObserver
+      lazyImages.forEach(img => {
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+          img.classList.remove('lazy-load');
+        }
+      });
+    }
   }
 
   // ======================== THEME MANAGEMENT ========================
@@ -985,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initialize();
   initLazyLoading();
 
-  function animateClock(timestamp) {
+  function animateClock() {
     updateClock();
     const id = requestAnimationFrame(animateClock);
     animationFrameIds.push(id);
