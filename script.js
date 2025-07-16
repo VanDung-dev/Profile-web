@@ -298,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function openTerminal() {
+    initLazyLoading()
     appIcon.style.display = 'none';
     terminalContainer.style.display = 'block';
     terminalContainer.classList.add('restore');
@@ -323,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function restoreTerminal() {
+    initLazyLoading()
     appIcon.style.display = 'none';
     redDot.style.display = 'none';
     redDot.classList.remove('visible');
@@ -885,6 +887,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function setLanguage(lang) {
+    initLazyLoading()
     state.currentLanguage = lang;
     localStorage.setItem('language', lang);
 
