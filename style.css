@@ -20,6 +20,13 @@
 }
 
 body {
+  background: linear-gradient(135deg,
+  #0a5256 0%,
+  #0A1D56 25%,
+  #492E87 50%,
+  #37B5B6 75%,
+  #F2F597 100%
+  ) !important;
   color: var(--text-light);
   height: 100vh;
   display: flex;
