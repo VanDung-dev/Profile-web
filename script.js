@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
       dock.classList.remove('hidden');
 
       state.isMinimized = true;
-    }, 300);
+    }, 200);
   }
 
   function toggleMaximize() {
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       state.isClosed = true;
       state.isMinimized = false;
-    }, 300);
+    }, 200);
   }
 
   // ======================== RESIZE FUNCTIONALITY ========================
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       state.isClosed = false;
       state.isMinimized = false;
-    }, 300);
+    }, 200);
   }
 
   function restoreTerminal() {
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       state.isMinimized = false;
-    }, 300);
+    }, 200);
   }
 
   // ======================== TERMINAL CONTENT ========================
@@ -830,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!lastTimestamp) lastTimestamp = timestamp;
 
       if (isWaiting) {
-        if (timestamp - waitStart >= 2000) { // Giảm thời gian chờ từ 3s xuống 2s
+        if (timestamp - waitStart >= 1500) { // Giảm thời gian chờ xuống còn 1.5s để mượt hơn
           isWaiting = false;
           isDeleting = true;
           lastTimestamp = timestamp;
@@ -840,7 +840,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const elapsed = timestamp - lastTimestamp;
-      const typingSpeed = isDeleting ? 30 : 80 + Math.random() * 50;
+      const typingSpeed = isDeleting ? 20 : 40 + Math.random() * 30;
 
       if (elapsed >= typingSpeed) {
         const currentText = commands[commandIndex];
@@ -1010,6 +1010,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     themePopup.innerHTML = '';
 
+    // Thêm nút đóng
+    const closeBtn = document.createElement('div');
+    closeBtn.className = 'close-theme-popup';
+    closeBtn.id = 'close-theme-popup';
+    closeBtn.innerHTML = '<i class="nf nf-md-close"></i>';
+    themePopup.appendChild(closeBtn);
+
+    // Tạo container cho các ô màu
+    const themesContainer = document.createElement('div');
+    themesContainer.className = 'themes-container';
+    themesContainer.style.display = 'flex';
+    themesContainer.style.flexWrap = 'wrap';
+    themesContainer.style.justifyContent = 'center';
+    themesContainer.style.gap = '12px';
+    themesContainer.style.marginTop = '15px';
+    themesContainer.style.width = '100%';
+    
     const themes = ['default', 'blue', 'red', 'yellow', 'green'];
 
     themes.forEach(theme => {
@@ -1020,10 +1037,25 @@ document.addEventListener('DOMContentLoaded', function() {
         setTheme(theme);
         themePopup.style.display = 'none';
       });
-      themePopup.appendChild(option);
+      themesContainer.appendChild(option);
     });
+    
+    themePopup.appendChild(themesContainer);
 
     themePopup.style.display = 'none';
+
+    // Thêm sự kiện cho nút đóng
+    closeBtn.addEventListener('click', () => {
+      themePopup.style.display = 'none';
+    });
+
+    // Đóng popup khi click bên ngoài
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.theme-selector-popup') || e.target.closest('#theme-selector')) return;
+      if (themePopup.style.display === 'flex') {
+        themePopup.style.display = 'none';
+      }
+    });
 
     const currentTheme = localStorage.getItem('theme') || 'default';
     document.querySelectorAll('.theme-option').forEach(option => {
