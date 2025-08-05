@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     setupEventListeners();
+    setupKeyboardNavigation(); // Thêm hỗ trợ điều hướng bàn phím
     updateClock();
     setInterval(updateClock, 60000);
     
@@ -514,10 +515,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const startY = e.clientY;
     const startWidth = parseInt(document.defaultView.getComputedStyle(terminalContainer).width, 10);
     const startHeight = parseInt(document.defaultView.getComputedStyle(terminalContainer).height, 10);
+    
+    // Lấy vị trí ban đầu của terminal
+    const rect = terminalContainer.getBoundingClientRect();
+    const startLeft = rect.left;
+    const startTop = rect.top;
 
     function resize(e) {
-      const newWidth = startWidth + (e.clientX - startX);
-      const newHeight = startHeight + (e.clientY - startY);
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      
+      const newWidth = startWidth + deltaX;
+      const newHeight = startHeight + deltaY;
 
       // Giới hạn kích thước tối thiểu
       const minWidth = 400;
@@ -525,11 +534,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (newWidth >= minWidth) {
         terminalContainer.style.width = `${newWidth}px`;
+        // Giữ cho cạnh trái cố định bằng cách điều chỉnh vị trí left
+        terminalContainer.style.left = `${startLeft}px`;
       }
 
       if (newHeight >= minHeight) {
         terminalContainer.style.height = `${newHeight}px`;
+        // Giữ cho cạnh trên cố định bằng cách điều chỉnh vị trí top
+        terminalContainer.style.top = `${startTop}px`;
       }
+      
+      // Đảm bảo terminal có position là fixed khi thay đổi kích thước
+      terminalContainer.style.position = 'fixed';
+      terminalContainer.style.margin = '0';
     }
 
     function stopResize() {
@@ -1190,6 +1207,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initLazyLoading()
     state.currentLanguage = lang;
     localStorage.setItem('language', lang);
+    // Lưu ngôn ngữ vào cookies để service worker có thể truy cập
+    document.cookie = `language=${lang}; path=/; max-age=31536000`; // 1 năm
 
     document.querySelectorAll('.lang-content').forEach(content => {
       content.style.display = content.classList.contains(`lang-${lang}`) ? 'block' : 'none';
@@ -1436,4 +1455,56 @@ document.addEventListener('DOMContentLoaded', function() {
     animationFrameIds.push(id);
   }
   animateClock();
+
+  // Thêm hàm xử lý lỗi hình ảnh
+  function handleImageError(img) {
+    img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%23cccccc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
+    img.alt = 'Hình ảnh không khả dụng';
+  }
+
+  function handleImageLoad(img) {
+    img.classList.add('loaded');
+  }
+
+  // Cập nhật hàm loadImage
+  function loadImage(img) {
+    const realSrc = img.getAttribute('data-src');
+    if (realSrc) {
+      img.src = realSrc;
+      img.onload = () => handleImageLoad(img);
+      img.onerror = () => handleImageError(img);
+    }
+  }
+
+  // Thêm hỗ trợ điều hướng bàn phím
+  function setupKeyboardNavigation() {
+    // Điều hướng tab bằng phím mũi tên
+    document.addEventListener('keydown', (e) => {
+      // Chỉ xử lý nếu focus không ở trong trường input
+      if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+        return;
+      }
+      
+      const tabs = document.querySelectorAll('.tab');
+      const activeTab = document.querySelector('.tab.active');
+      let currentIndex = Array.from(tabs).indexOf(activeTab);
+      
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        tabs[currentIndex].click();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % tabs.length;
+        tabs[currentIndex].click();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        tabs[0].click();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        tabs[tabs.length - 1].click();
+      }
+    });
+  }
+
 });
