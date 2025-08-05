@@ -46,18 +46,6 @@ Dự án **Profile-web** là một **hồ sơ cá nhân** (personal profile) đ�
 
 ---
 
-## 📂 Cấu trúc dự án
-
-```
-VanDung-dev-profile/
-├── images           # Thư mục chứa ảnh
-├── index.html       # Tệp HTML chính chứa cấu trúc nội dung
-├── style.css        # Tùy chỉnh giao diện, dock, tab, theme
-└── script.js        # Toàn bộ logic điều khiển giao diện tương tác
-```
-
----
-
 ## 🔧 Cách triển khai
 
 ### ✅ Cách 1: Chạy cục bộ
