@@ -313,6 +313,8 @@ body {
   transition: none !important;
   user-select: none;
   pointer-events: none;
+  position: fixed !important;
+  margin: 0 !important;
 }
 
 .container.maximized .resize-handle {
