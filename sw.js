@@ -4,6 +4,7 @@ const urlsToCache = [
   '/index.html',
   '/script.js',
   '/style.css',
+  '/content.json', // Thêm file content.json vào danh sách cache để hỗ trợ tải nội dung offline
   '/images/avatar.webp',
   '/images/terminal-icon.webp'
 ];
