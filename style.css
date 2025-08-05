@@ -9,6 +9,9 @@
   --text-light: #f0f0f0;
   --text-soft: #ddd;
   --card-bg: rgba(68, 71, 90, 0.2);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
 }
 
 /* ======================== RESET & BASE ======================== */
@@ -49,10 +52,32 @@ body {
   gap: 12px;
   z-index: 10000;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  /*display: none;*/
   flex-wrap: wrap;
   max-width: 300px;
   justify-content: center;
+  align-items: center;
+}
+
+.close-theme-popup {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-light);
+  font-size: 16px;
+  transition: all var(--transition-fast);
+  border-radius: 3px;
+  z-index: 10001;
+}
+
+.close-theme-popup:hover {
+  background-color: rgba(253, 0, 0, 0.5);
+  transform: scale(1.1);
 }
 
 .theme-option {
@@ -217,7 +242,7 @@ body {
   overflow: visible;
   box-shadow: 0 0 30px rgba(22, 160, 133, 0.4);
   border: 1px solid #333;
-  transition: all 0.15s ease-in-out;
+  transition: all var(--transition-normal);
   display: none;
 }
 
@@ -233,6 +258,7 @@ body {
   transform: scale(0.1);
   opacity: 0;
   pointer-events: none;
+  transition: all var(--transition-fast);
 }
 
 @keyframes restoreTerminal {
@@ -253,6 +279,7 @@ body {
   top: 0;
   left: 0;
   z-index: 1000;
+  transition: all var(--transition-normal);
 }
 
 .container.dragging {
@@ -263,6 +290,7 @@ body {
 
 .terminal-header {
   cursor: grab;
+  transition: background-color var(--transition-fast);
 }
 
 .terminal-header:active {
@@ -316,13 +344,7 @@ body {
   border-bottom-right-radius: 18px;
   transform: rotate(0deg);
   pointer-events: auto;
-  transition: 
-    border-color 0.2s, 
-    border-width 0.2s, 
-    width 0.2s, 
-    height 0.2s, 
-    border-radius 0.2s,
-    box-shadow 0.2s;
+  transition: all var(--transition-fast);
   z-index: 1001;
 }
 
@@ -342,7 +364,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s, opacity 0.3s;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -359,6 +381,7 @@ body {
   transform: scale(0);
   opacity: 0;
   display: flex;
+  transition: all var(--transition-normal);
 }
 
 .app-icon.visible {
@@ -384,11 +407,19 @@ body {
   z-index: 10001;
   top: -15px;
   right: -15px;
+  transition: all var(--transition-fast);
 }
 
 .red-dot.visible,
 .dock-icon .red-dot.visible {
   display: block;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 .dock {
@@ -406,9 +437,9 @@ body {
   z-index: 9999;
   gap: 12px;
   border: 1px solid rgba(255, 255, 255, 0.75);
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-normal);
   transform-style: preserve-3d;
-backface-visibility: hidden;
+  backface-visibility: hidden;
   perspective: 1000px;
 }
 
@@ -422,7 +453,7 @@ backface-visibility: hidden;
   border-radius: 12px;
   background: var(--terminal-bg);
   margin: auto;
-  transition: transform 0.2s, background 0.2s;
+  transition: all var(--transition-fast);
   transform-origin: bottom;
   transform: translateZ(0);
   backface-visibility: hidden;
@@ -436,6 +467,7 @@ backface-visibility: hidden;
 .dock-icon .icon-content i {
   font-size: 30px;
   color: var(--text-soft);
+  transition: all var(--transition-fast);
 }
 
 /* ======================== TERMINAL HEADER & TABS ======================== */
@@ -449,6 +481,7 @@ backface-visibility: hidden;
   padding: 0 12px;
   border-bottom: 1px solid #444;
   gap: 10px;
+  transition: all var(--transition-fast);
 }
 
 .container-title {
@@ -460,6 +493,7 @@ backface-visibility: hidden;
   font-weight: bold;
   letter-spacing: 1px;
   pointer-events: none;
+  transition: all var(--transition-fast);
 }
 
 .terminal-buttons {
@@ -478,7 +512,7 @@ backface-visibility: hidden;
   border-radius: 3px;
   cursor: pointer;
   color: var(--text-light);
-  transition: background-color 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .terminal-buttons .btn:hover {
@@ -487,11 +521,13 @@ backface-visibility: hidden;
 
 .terminal-buttons .close:hover {
   background-color: #963232;
+  transform: scale(1.1);
 }
 
 .terminal-buttons .maximize:hover,
 .terminal-buttons .minimize:hover {
   background-color: var(--gray-dark);
+  transform: scale(1.1);
 }
 
 .terminal-left {
@@ -512,7 +548,7 @@ backface-visibility: hidden;
   border-radius: 3px;
   cursor: pointer;
   color: var(--text-light);
-  transition: background-color 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .language-toggle {
@@ -524,6 +560,7 @@ backface-visibility: hidden;
 .add-tab:hover,
 .language-toggle:hover {
   background-color: var(--gray-dark);
+  transform: scale(1.1);
 }
 
 .tabs-container {
@@ -532,6 +569,7 @@ backface-visibility: hidden;
   border-bottom: 1px solid #444;
   padding: 0 5px;
   overflow-x: auto;
+  transition: all var(--transition-fast);
 }
 
 .tab {
@@ -540,7 +578,7 @@ backface-visibility: hidden;
   background: var(--gray-dark);
   color: var(--text-soft);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--transition-fast);
   position: relative;
   font-size: 15px;
   text-align: center;
@@ -555,10 +593,11 @@ backface-visibility: hidden;
 
 .tab:hover:not(.active) {
   background: #333;
+  transform: translateY(-2px);
 }
 
 .tab, .skill-tag, .project, .certificate, .contact-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all var(--transition-fast);
 }
 
 .content {
@@ -568,12 +607,13 @@ backface-visibility: hidden;
   font-size: 16px;
   line-height: 1.6;
   background: var(--terminal-bg);
+  transition: all var(--transition-fast);
 }
 
 .content-section {
   display: none;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity var(--transition-normal);
 }
 
 .content-section.active {
@@ -593,14 +633,16 @@ backface-visibility: hidden;
   overflow-wrap: break-word;
   min-height: 1.2em;
   white-space: pre;
+  transition: all var(--transition-fast);
 }
 
 .cursor {
   animation: blink 1s infinite;
+  transition: all var(--transition-fast);
 }
 
 .cursor.waiting {
-  animation:  blink 1s infinite;;
+  animation: blink 1s infinite;
 }
 
 .output {
@@ -616,6 +658,7 @@ backface-visibility: hidden;
   padding: 4px 0;
   flex-wrap: nowrap;
   position: relative;
+  transition: all var(--transition-fast);
 }
 
 .zsh-left {
@@ -639,6 +682,7 @@ backface-visibility: hidden;
   max-width: 263px;
   margin-right: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all var(--transition-fast);
 }
 
 .manjaro-icon-bg,
@@ -648,6 +692,7 @@ backface-visibility: hidden;
   font-weight: bold;
   font-size: 14px;
   padding: 0 14px;
+  transition: all var(--transition-fast);
 }
 
 .manjaro-icon-bg {
@@ -680,6 +725,7 @@ backface-visibility: hidden;
   margin-bottom: 30px;
   align-items: center;
   flex-wrap: wrap;
+  transition: all var(--transition-normal);
 }
 
 .avatar-container {
@@ -689,6 +735,7 @@ backface-visibility: hidden;
   border: 3px solid var(--manjaro-light-green);
   overflow: hidden;
   box-shadow: 0 0 20px rgba(26, 188, 156, 0.4);
+  transition: all var(--transition-normal);
 }
 
 .avatar {
@@ -701,11 +748,18 @@ backface-visibility: hidden;
   justify-content: center;
   color: var(--terminal-bg);
   font-size: 80px;
+  transition: all var(--transition-normal);
+}
+
+.avatar-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(26, 188, 156, 0.6);
 }
 
 .profile-info {
   flex: 1;
   min-width: 300px;
+  transition: all var(--transition-normal);
 }
 
 .name {
@@ -713,17 +767,20 @@ backface-visibility: hidden;
   font-size: 32px;
   margin-bottom: 8px;
   font-weight: bold;
+  transition: all var(--transition-fast);
 }
 
 .title {
   color: #ffb86c;
   margin-bottom: 15px;
   font-size: 20px;
+  transition: all var(--transition-fast);
 }
 
 .about {
   margin-bottom: 25px;
   line-height: 1.7;
+  transition: all var(--transition-fast);
 }
 
 .about p {
@@ -732,7 +789,7 @@ backface-visibility: hidden;
 
 .skills {
   margin-top: 10px;
-  transition: transform 0.3s, box-shadow 0.3s;;
+  transition: all var(--transition-fast);
 }
 
 .skill-tag {
@@ -743,12 +800,14 @@ backface-visibility: hidden;
   border-radius: 4px;
   margin: 0 8px 12px 0;
   font-size: 20px;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .skill-tag:hover {
-  transform: scale(1.02);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  background: var(--manjaro-light-green);
+  color: #000;
 }
 
 .social-links {
@@ -767,12 +826,14 @@ backface-visibility: hidden;
   padding: 10px 20px;
   background: rgba(26, 188, 156, 0.1);
   border-radius: 5px;
-  transition: all 0.3s;
+  transition: all var(--transition-fast);
 }
 
 .social-link:hover {
   background: rgba(26, 188, 156, 0.2);
   color: var(--manjaro-green);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .social-link i {
@@ -789,15 +850,15 @@ backface-visibility: hidden;
   border-radius: 5px;
   margin-bottom: 25px;
   border-left: 3px solid var(--manjaro-dark-green);
-  transition: transform 0.3s, box-shadow 0.3s;;
+  transition: all var(--transition-normal);
   margin-top: 20px;
 }
 
 .project:hover,
 .certificate:hover,
 .contact-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .project-title,
@@ -808,6 +869,7 @@ backface-visibility: hidden;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
+  transition: all var(--transition-fast);
 }
 
 .project-title i,
@@ -830,15 +892,39 @@ backface-visibility: hidden;
   padding: 8px 15px;
   background: rgba(26, 188, 156, 0.1);
   border-radius: 4px;
-  transition: all 0.3s;
+  transition: all var(--transition-fast);
 }
 
 .github-link:hover {
   background: rgba(26, 188, 156, 0.2);
   text-decoration: underline;
+  transform: translateY(-2px);
 }
 
 .github-link i {
+  margin-right: 8px;
+}
+
+.certificates-link {
+  color: var(--manjaro-light-green);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 15px;
+  background: rgba(26, 188, 156, 0.1);
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.certificates-link:hover {
+  background: rgba(26, 188, 156, 0.2);
+  text-decoration: underline;
+  transform: translateY(-2px);
+}
+
+.certificates-link i {
   margin-right: 8px;
 }
 
@@ -878,6 +964,11 @@ backface-visibility: hidden;
   color: var(--manjaro-green);
   font-size: 16px;
   top: 0;
+}
+
+/* Thêm khoảng cách giữa icon và văn bản trong tiêu đề certificate */
+.certificate-title i {
+  margin-right: 10px;
 }
 
 .contact-info {
@@ -921,6 +1012,7 @@ backface-visibility: hidden;
   margin: 0;
   position: relative;
   z-index: 2;
+  transition: all var(--transition-fast);
 }
 
 .terminal-input::selection {
@@ -950,7 +1042,7 @@ backface-visibility: hidden;
   border-radius: 1px;
   box-shadow: 0 0 0 1px #000;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity var(--transition-fast);
 }
 
 @keyframes blink {
@@ -977,12 +1069,13 @@ backface-visibility: hidden;
   color: var(--manjaro-light-green);
   margin-top: 10px;
   white-space: pre;
+  transition: all var(--transition-fast);
 }
 
 /* ======================== LAZY LOADING ======================== */
 img.lazy-load {
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity var(--transition-normal);
 }
 
 img.lazy-load.loaded {
@@ -1115,7 +1208,6 @@ img.lazy-load.loaded {
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-
   .content { padding: 20px; font-size: 15px; }
 
   .terminal-header {
