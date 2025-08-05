@@ -1,0 +1,182 @@
+{
+  "profile": {
+    "vi": {
+      "name": "Nguyễn Lê Văn Dũng",
+      "title": "Kỹ sư phần mềm",
+      "about": [
+        "Tôi là Nguyễn Lê Văn Dũng, hiện đang là sinh viên năm hai ngành Công nghệ thông tin, chuyên ngành Kỹ sư phần mềm tại Viện Đào tạo Quốc tế (NIIE), Đại học Nguyễn Tất Thành, chi nhánh Quận 7.",
+        "Trong quá trình học tập, tôi đã tích lũy được kiến thức vững chắc và kỹ năng thực hành tốt, đặc biệt là khả năng sử dụng Python ở mức độ nâng cao. Tôi luôn chủ động học hỏi và không ngừng tìm tòi những công nghệ mới.",
+        "Hiện tại, tôi đang rất hứng thú và dành thời gian nghiên cứu sâu về Trí tuệ nhân tạo (AI) và Blockchain, mong muốn được áp dụng những kiến thức này vào các dự án thực tế trong tương lai."
+      ],
+      "skills": [
+        { "icon": "nf-dev-python", "name": "Python" },
+        { "icon": "nf-dev-linux", "name": "Linux" },
+        { "icon": "nf-md-security", "name": "Security" },
+        { "icon": "nf-dev-mongodb", "name": "MongoDB" },
+        { "icon": "nf-fa-bitcoin", "name": "Blockchain" },
+        { "icon": "nf-dev-git", "name": "Git" },
+        { "icon": "nf-fa-database", "name": "SQL/NoSQL" },
+        { "icon": "nf-fa-gamepad", "name": "PyGame" }
+      ],
+      "socialLinks": [
+        { "url": "https://github.com/VanDung-dev/", "icon": "nf-fa-github", "name": "GitHub" },
+        { "url": "https://www.linkedin.com/in/dung-nguyen-211bab348/", "icon": "nf-fa-linkedin", "name": "LinkedIn" },
+        { "url": "#", "icon": "nf-fa-twitter", "name": "Twitter" },
+        { "url": "mailto:dungnguyen2661@gmail.com", "icon": "nf-fa-envelope", "name": "Email" }
+      ]
+    },
+    "en": {
+      "name": "Nguyen Le Van Dung",
+      "title": "Software Engineer",
+      "about": [
+        "Hello! I'm Nguyen Le Van Dung, currently a second-year student majoring in Information Technology, specializing in Software Engineering at the National Institute of International Education (NIIE), Nguyen Tat Thanh University, District 7 campus.",
+        "During my studies, I've gained a solid foundation of knowledge and practical skills, especially in advanced Python programming. I'm always proactive in learning and continuously exploring new technologies.",
+        "Currently, I'm very passionate about and dedicating my time to in-depth research in Artificial Intelligence (AI) and Blockchain, with the desire to apply this knowledge to real-world projects in the future."
+      ],
+      "skills": [
+        { "icon": "nf-dev-python", "name": "Python" },
+        { "icon": "nf-dev-linux", "name": "Linux" },
+        { "icon": "nf-md-security", "name": "Security" },
+        { "icon": "nf-dev-mongodb", "name": "MongoDB" },
+        { "icon": "nf-fa-bitcoin", "name": "Blockchain" },
+        { "icon": "nf-dev-git", "name": "Git" },
+        { "icon": "nf-fa-database", "name": "SQL/NoSQL" },
+        { "icon": "nf-fa-gamepad", "name": "PyGame" }
+      ],
+      "socialLinks": [
+        { "url": "https://github.com/VanDung-dev/", "icon": "nf-fa-github", "name": "GitHub" },
+        { "url": "https://www.linkedin.com/in/dung-nguyen-211bab348/", "icon": "nf-fa-linkedin", "name": "LinkedIn" },
+        { "url": "#", "icon": "nf-fa-twitter", "name": "Twitter" },
+        { "url": "mailto:dungnguyen2661@gmail.com", "icon": "nf-fa-envelope", "name": "Email" }
+      ]
+    }
+  },
+  "projects": {
+    "vi": [
+      {
+        "icon": "nf-fa-chess",
+        "title": "Game Cờ Vua Python",
+        "description": "Ứng dụng game cờ vua đa nền tảng sử dụng PyGame với giao diện đồ họa 2D cơ bản. Hỗ trợ cả chế độ chơi hai người và chơi với máy ở nhiều cấp độ khó. Tính năng nổi bật: Gợi ý nước đi bằng thuật toán Minimax, undo/redo, và mô hình cờ vua tự phát triển không dựa trên PyChess.",
+        "githubUrl": "https://github.com/VanDung-dev/Chess_Python",
+        "githubText": "Xem mã nguồn trên GitHub"
+      },
+      {
+        "icon": "nf-fa-discord",
+        "title": "Bot Discord Đa chức năng",
+        "description": "Bot Discord với hơn 20 lệnh khác nhau được phát triển bằng Discord.py API. Tích hợp nhiều dịch vụ bên thứ ba như YouTube, tìm hình ảnh, chat bot AI. Tính năng chính: Quản lý server, thông báo tự động, công cụ kiểm duyệt nội dung, và chat bot AI dựa trên mô hình Google Gemini.",
+        "githubUrl": "https://github.com/VanDung-dev/DSB-bot",
+        "githubText": "Xem mã nguồn trên GitHub"
+      },
+      {
+        "icon": "nf-md-robot",
+        "title": "Mô hình huấn luyện AI",
+        "description": "Dự án kết hợp giữa mạng nơ-ron (CNN + Transformer) và thuật toán tìm kiếm cây Monte Carlo (MCTS), hỗ trợ học từ dữ liệu PGN, tự chơi (self-play), và điều chỉnh chiến thuật theo giai đoạn ván cờ. Hệ thống được tối ưu hóa cho GPU AMD sử dụng ROCm (đã thử nghiệm trên Radeon RX 7600S). Phù hợp cho nghiên cứu AI cờ vua, hệ thống tự học, hoặc tích hợp vào các giải pháp giáo dục và học tăng cường.",
+        "githubUrl": "https://github.com/VanDung-dev/Chess_AI_ROCm",
+        "githubText": "Xem mã nguồn trên GitHub"
+      }
+    ],
+    "en": [
+      {
+        "icon": "nf-fa-chess",
+        "title": "Python Chess Game",
+        "description": "A cross-platform chess game built with PyGame, featuring a basic 2D graphical interface. Supports both two-player mode and AI opponents at various difficulty levels. Key features: Move suggestions using the Minimax algorithm, undo/redo, and a custom chess model not based on PyChess.",
+        "githubUrl": "https://github.com/VanDung-dev/Chess_Python",
+        "githubText": "View source on GitHub"
+      },
+      {
+        "icon": "nf-fa-discord",
+        "title": "Multifunctional Discord Bot",
+        "description": "A Discord bot with over 20 commands, developed using the Discord.py API. Integrates third-party services like YouTube, image search, and AI chatbot. Main features: Server management, automated notifications, content moderation tools, and an AI chatbot powered by Google Gemini.",
+        "githubUrl": "https://github.com/VanDung-dev/DSB-bot",
+        "githubText": "View source on GitHub"
+      },
+      {
+        "icon": "nf-md-robot",
+        "title": "AI training model",
+        "description": "The project combines neural networks (CNN + Transformer) and Monte Carlo Tree Search (MCTS) algorithms, supporting learning from PGN data, self-play and adjusting tactics according to chess phases. The system is optimized for AMD GPUs using ROCm (tested on Radeon RX 7600S). Suitable for chess AI research, self-learning systems or integration into education and reinforcement learning solutions.",
+        "githubUrl": "https://github.com/VanDung-dev/Chess_AI_ROCm",
+        "githubText": "View source on GitHub"
+      }
+    ]
+  },
+  "certificates": {
+    "vi": [
+      {
+        "icon": "nf-fa-certificate",
+        "title": "Kỹ sư phần mềm",
+        "organization": "Trường đại học Nguyễn Tất Thành",
+        "date": "Tháng 5, 2025",
+        "descriptions": [
+          "Tháng 3, 2025 - Chứng chỉ công nhận kỹ năng Python nâng cao.",
+          "Tháng 5, 2025 - Chứng chỉ công nhận kỹ năng bảo mật.",
+          "Tháng 5, 2025 - Chứng chỉ công nhận kỹ năng cấu trúc dữ liệu và giải thuật."
+        ]
+      },
+      {
+        "icon": "nf-fa-certificate",
+        "title": "Giới thiệu Khoa học Dữ liệu với Python",
+        "organization": "Harvard University",
+        "date": "Tháng 7, 2025",
+        "description": "Khóa học CS109x: Giới thiệu Khoa học Dữ liệu với Python do HarvardX cung cấp.",
+        "certificateUrl": "https://courses.edx.org/certificates/a80e973c773143f1a16b2a8e8eb72d6d",
+        "certificateText": "Xem chứng chỉ"
+      }
+    ],
+    "en": [
+      {
+        "icon": "nf-fa-certificate",
+        "title": "Software Engineer",
+        "organization": "Nguyen Tat Thanh University",
+        "date": "May 2025",
+        "descriptions": [
+          "March 2025 - Certificate recognizing advanced Python skills.",
+          "May 2025 - Certificate recognizing security skills.",
+          "May 2025 - Certificate recognizing data structures and algorithms skills."
+        ]
+      },
+      {
+        "icon": "nf-fa-certificate",
+        "title": "Introduction to Data Science with Python",
+        "organization": "Harvard University",
+        "date": "July 2025",
+        "description": "Course CS109x: Introduction to Data Science with Python offered by HarvardX.",
+        "certificateUrl": "https://courses.edx.org/certificates/a80e973c773143f1a16b2a8e8eb72d6d",
+        "certificateText": "View Certificate"
+      }
+    ]
+  },
+  "contact": {
+    "vi": {
+      "contactTitle": "Liên hệ",
+      "email": "dungnguyen2661@gmail.com",
+      "phone": "+84 378 321 747",
+      "address": "Thành phố Hồ Chí Minh, Việt Nam",
+      "messageTitle": "Gửi tin nhắn",
+      "messageDescription": "Bạn có thể gửi tin nhắn trực tiếp cho tôi thông qua các nền tảng dưới đây:",
+      "socialLinks": [
+        { "url": "https://t.me/vandungdev", "icon": "nf-fa-telegram", "name": "Telegram" },
+        { "url": "#", "icon": "nf-fa-discord", "name": "Discord" }
+      ],
+      "scheduleTitle": "Lịch làm việc",
+      "scheduleDescription": "Tôi sẵn sàng cho các cơ hội hợp tác và dự án mới. Bạn có thể đặt lịch hẹn thảo luận qua:",
+      "scheduleUrl": "https://calendly.com/dungnguyen2661/new-meeting",
+      "scheduleText": "Đặt lịch hẹn qua Calendly"
+    },
+    "en": {
+      "contactTitle": "Contact",
+      "email": "dungnguyen2661@gmail.com",
+      "phone": "+84 378 321 747",
+      "address": "Ho Chi Minh City, Vietnam",
+      "messageTitle": "Send a Message",
+      "messageDescription": "You can send me a direct message through the platforms below:",
+      "socialLinks": [
+        { "url": "https://t.me/vandungdev", "icon": "nf-fa-telegram", "name": "Telegram" },
+        { "url": "#", "icon": "nf-fa-discord", "name": "Discord" }
+      ],
+      "scheduleTitle": "Work Schedule",
+      "scheduleDescription": "I am open to collaboration opportunities and new projects. You can schedule a discussion via:",
+      "scheduleUrl": "https://calendly.com/dungnguyen2661/new-meeting",
+      "scheduleText": "Schedule a meeting via Calendly"
+    }
+  }
+}
