@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
     originalContent: content.innerHTML,
     minimizedContent: content.innerHTML,
     minimizedTitle: ContainerTitle.textContent,
-    currentLanguage: localStorage.getItem('language') || 'vi'
+    currentLanguage: localStorage.getItem('language') || 'vi',
+    contentData: null // Dữ liệu nội dung sẽ được tải từ file JSON
   };
 
   // ======================== INITIALIZATION ========================
@@ -49,10 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
     state.isMinimized = false;
     state.isClosed = false;
     
-    setTimeout(() => {
-      terminalContainer.classList.remove('restore');
-      startTypingAll();
-    }, 300);
+    // Tải nội dung từ file JSON
+    loadContentFromJSON(() => {
+      setTimeout(() => {
+        terminalContainer.classList.remove('restore');
+        startTypingAll();
+      }, 300);
+    });
     
     setupEventListeners();
     updateClock();
@@ -69,6 +73,289 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('ServiceWorker registration failed: ', err);
           });
       });
+    }
+  }
+
+  // ======================== CONTENT LOADING ========================
+  // Hàm tải nội dung từ file JSON
+  function loadContentFromJSON(callback) {
+    fetch('content.json')
+      .then(response => response.json())
+      .then(data => {
+        state.contentData = data;
+        updateAllContent(); // Cập nhật toàn bộ nội dung sau khi tải xong
+        if (callback) callback();
+      })
+      .catch(error => {
+        console.error('Error loading content from JSON:', error);
+        // Fallback to original content if JSON loading fails
+        if (callback) callback();
+      });
+  }
+
+  // Cập nhật toàn bộ nội dung từ dữ liệu JSON
+  function updateAllContent() {
+    if (!state.contentData) return;
+    updateHomeContent();
+    updateProjectsContent();
+    updateCertificatesContent();
+    updateContactContent();
+    setLanguage(state.currentLanguage);
+  }
+
+  // Cập nhật nội dung trang chủ từ dữ liệu JSON
+  function updateHomeContent() {
+    if (!state.contentData.profile) return;
+    
+    const viContent = state.contentData.profile.vi;
+    const enContent = state.contentData.profile.en;
+    
+    const viHomeSection = document.querySelector('#home-content .lang-content.lang-vi');
+    const enHomeSection = document.querySelector('#home-content .lang-content.lang-en');
+    
+    if (viHomeSection) {
+      viHomeSection.innerHTML = `
+        <div class="profile-header">
+          <div class="avatar-container">
+            <div class="avatar">
+              <img 
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" 
+              data-src="images/avatar.webp" 
+              alt="Avatar"
+              class="lazy-load"
+              style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+              >
+            </div>
+          </div>
+          <div class="profile-info">
+            <div class="name">${viContent.name}</div>
+            <div class="title">${viContent.title}</div>
+            <div class="about">
+              <p>${viContent.about[0]}</p>
+              <p>${viContent.about[1]}</p>
+              <p>${viContent.about[2]}</p>
+            </div>
+          </div>
+        </div>
+        <div class="skills">
+          <p><strong>Kỹ năng chính:</strong></p>
+          <div>
+            ${viContent.skills.map(skill => 
+              `<span class="skill-tag"><i class="nf ${skill.icon}"></i> ${skill.name}</span>`
+            ).join('')}
+          </div>
+        </div>
+        <div class="social-links">
+          ${viContent.socialLinks.map(link => 
+            `<a href="${link.url}" class="social-link" target="_blank" rel="noopener noreferrer">
+              <i class="nf ${link.icon}"></i> ${link.name}
+            </a>`
+          ).join('')}
+        </div>
+      `;
+    }
+    
+    if (enHomeSection) {
+      enHomeSection.innerHTML = `
+        <div class="profile-header">
+          <div class="avatar-container">
+            <div class="avatar">
+              <img 
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" 
+              data-src="images/avatar.webp" 
+              alt="Avatar"
+              class="lazy-load"
+              style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+              >
+            </div>
+          </div>
+          <div class="profile-info">
+            <div class="name">${enContent.name}</div>
+            <div class="title">${enContent.title}</div>
+            <div class="about">
+              <p>${enContent.about[0]}</p>
+              <p>${enContent.about[1]}</p>
+              <p>${enContent.about[2]}</p>
+            </div>
+          </div>
+        </div>
+        <div class="skills">
+          <p><strong>Key Skills:</strong></p>
+          <div>
+            ${enContent.skills.map(skill => 
+              `<span class="skill-tag"><i class="nf ${skill.icon}"></i> ${skill.name}</span>`
+            ).join('')}
+          </div>
+        </div>
+        <div class="social-links">
+          ${enContent.socialLinks.map(link => 
+            `<a href="${link.url}" class="social-link" target="_blank" rel="noopener noreferrer">
+              <i class="nf ${link.icon}"></i> ${link.name}
+            </a>`
+          ).join('')}
+        </div>
+      `;
+    }
+  }
+
+  // Cập nhật nội dung dự án từ dữ liệu JSON
+  function updateProjectsContent() {
+    if (!state.contentData.projects) return;
+    
+    const viProjects = state.contentData.projects.vi;
+    const enProjects = state.contentData.projects.en;
+    
+    const viProjectsSection = document.querySelector('#projects-content .lang-content.lang-vi');
+    const enProjectsSection = document.querySelector('#projects-content .lang-content.lang-en');
+    
+    if (viProjectsSection) {
+      viProjectsSection.innerHTML = viProjects.map(project => `
+        <div class="project">
+          <div class="project-title"><i class="nf ${project.icon}"></i>${project.title}</div>
+          <div class="project-description">
+            ${project.description}
+          </div>
+          <a href="${project.githubUrl}" class="github-link" target="_blank" rel="noopener noreferrer">
+            <i class="nf fa-github"></i>${project.githubText}
+          </a>
+        </div>
+      `).join('');
+    }
+    
+    if (enProjectsSection) {
+      enProjectsSection.innerHTML = enProjects.map(project => `
+        <div class="project">
+          <div class="project-title"><i class="nf ${project.icon}"></i>${project.title}</div>
+          <div class="project-description">
+            ${project.description}
+          </div>
+          <a href="${project.githubUrl}" class="github-link" target="_blank" rel="noopener noreferrer">
+            <i class="nf fa-github"></i> ${project.githubText}
+          </a>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Cập nhật nội dung chứng chỉ từ dữ liệu JSON
+  function updateCertificatesContent() {
+    if (!state.contentData.certificates) return;
+    
+    const viCertificates = state.contentData.certificates.vi;
+    const enCertificates = state.contentData.certificates.en;
+    
+    const viCertificatesSection = document.querySelector('#certificates-content .lang-content.lang-vi');
+    const enCertificatesSection = document.querySelector('#certificates-content .lang-content.lang-en');
+    
+    if (viCertificatesSection) {
+      viCertificatesSection.innerHTML = viCertificates.map(certificate => `
+        <div class="certificate">
+          <div class="certificate-title"><i class="nf ${certificate.icon}"></i>${certificate.title}</div>
+          <div class="certificate-org"><i class="nf nf-fa-university"></i> ${certificate.organization}</div>
+          <div class="certificate-date">${certificate.date}</div>
+          ${certificate.descriptions ? 
+            certificate.descriptions.map(desc => `<div class="certificate-desc">${desc}</div>`).join('') : 
+            `<div class="certificate-desc">${certificate.description}</div>`
+          }
+          ${certificate.certificateUrl ? 
+            `<a href="${certificate.certificateUrl}" class="certificates-link" target="_blank" rel="noopener noreferrer">
+              <i class="nf nf-fa-certificate"></i> ${certificate.certificateText}
+            </a>` : ''
+          }
+        </div>
+      `).join('');
+    }
+    
+    if (enCertificatesSection) {
+      enCertificatesSection.innerHTML = enCertificates.map(certificate => `
+        <div class="certificate">
+          <div class="certificate-title"><i class="nf ${certificate.icon}"></i>${certificate.title}</div>
+          <div class="certificate-org"><i class="nf nf-fa-university"></i> ${certificate.organization}</div>
+          <div class="certificate-date">${certificate.date}</div>
+          ${certificate.descriptions ? 
+            certificate.descriptions.map(desc => `<div class="certificate-desc">${desc}</div>`).join('') : 
+            `<div class="certificate-desc">${certificate.description}</div>`
+          }
+          ${certificate.certificateUrl ? 
+            `<a href="${certificate.certificateUrl}" class="certificates-link" target="_blank" rel="noopener noreferrer">
+              <i class="nf nf-fa-certificate"></i> ${certificate.certificateText}
+            </a>` : ''
+          }
+        </div>
+      `).join('');
+    }
+  }
+
+  // Cập nhật nội dung liên hệ từ dữ liệu JSON
+  function updateContactContent() {
+    if (!state.contentData.contact) return;
+    
+    const viContact = state.contentData.contact.vi;
+    const enContact = state.contentData.contact.en;
+    
+    const viContactSection = document.querySelector('#contact-content .lang-content.lang-vi');
+    const enContactSection = document.querySelector('#contact-content .lang-content.lang-en');
+    
+    if (viContactSection) {
+      viContactSection.innerHTML = `
+        <div class="contact-info">
+          <div class="contact-card">
+            <div class="contact-title"><i class="nf nf-fa-address_card"></i>${viContact.contactTitle}</div>
+            <div class="contact-detail"><i class="nf nf-fa-envelope"></i> ${viContact.email}</div>
+            <div class="contact-detail"><i class="nf nf-fa-phone"></i> ${viContact.phone}</div>
+            <div class="contact-detail"><i class="nf nf-fa-map_marker"></i> ${viContact.address}</div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-title"><i class="nf nf-fa-comment"></i>${viContact.messageTitle}</div>
+            <div class="contact-detail">${viContact.messageDescription}</div>
+            <div class="social-links">
+              ${viContact.socialLinks.map(link => 
+                `<a href="${link.url}" class="social-link" target="_blank" rel="noopener noreferrer">
+                  <i class="nf ${link.icon}"></i> ${link.name}
+                </a>`
+              ).join('')}
+            </div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-title"><i class="nf nf-fa-calendar_days"></i>${viContact.scheduleTitle}</div>
+            <div class="contact-detail">${viContact.scheduleDescription}</div>
+            <a href="${viContact.scheduleUrl}" class="github-link" target="_blank" rel="noopener noreferrer">
+              ${viContact.scheduleText}
+            </a>
+          </div>
+        </div>
+      `;
+    }
+    
+    if (enContactSection) {
+      enContactSection.innerHTML = `
+        <div class="contact-info">
+          <div class="contact-card">
+            <div class="contact-title"><i class="nf nf-fa-address_card"></i>${enContact.contactTitle}</div>
+            <div class="contact-detail"><i class="nf nf-fa-envelope"></i> ${enContact.email}</div>
+            <div class="contact-detail"><i class="nf nf-fa-phone"></i> ${enContact.phone}</div>
+            <div class="contact-detail"><i class="nf nf-fa-map_marker"></i> ${enContact.address}</div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-title"><i class="nf nf-fa-comment"></i>${enContact.messageTitle}</div>
+            <div class="contact-detail">${enContact.messageDescription}</div>
+            <div class="social-links">
+              ${enContact.socialLinks.map(link => 
+                `<a href="${link.url}" class="social-link" target="_blank" rel="noopener noreferrer">
+                  <i class="nf ${link.icon}"></i> ${link.name}
+                </a>`
+              ).join('')}
+            </div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-title"><i class="nf nf-fa-calendar_days"></i>${enContact.scheduleTitle}</div>
+            <div class="contact-detail">${enContact.scheduleDescription}</div>
+            <a href="${enContact.scheduleUrl}" class="github-link" target="_blank" rel="noopener noreferrer">
+              ${enContact.scheduleText}
+            </a>
+          </div>
+        </div>
+      `;
     }
   }
 
