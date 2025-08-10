@@ -10,13 +10,15 @@
       ],
       "skills": [
         { "icon": "nf-dev-python", "name": "Python" },
-        { "icon": "nf-dev-linux", "name": "Linux" },
-        { "icon": "nf-md-security", "name": "Security" },
-        { "icon": "nf-dev-mongodb", "name": "MongoDB" },
-        { "icon": "nf-fa-bitcoin", "name": "Blockchain" },
+        { "icon": "nnf-dev-numpy", "name": "Numpy" },
+        { "icon": "nf-dev-pandas", "name": "Pandas" },
+        { "icon": "nf-dev-flask", "name": "Flask" },
+        { "icon": "nf-dev-fastapi", "name": "FastAPI" },
         { "icon": "nf-dev-git", "name": "Git" },
-        { "icon": "nf-fa-database", "name": "SQL/NoSQL" },
-        { "icon": "nf-fa-gamepad", "name": "PyGame" }
+        { "icon": "nf-fa-docker", "name": "Docker" },
+        { "icon": "nf-dev-linux", "name": "Linux" },
+        { "icon": "nf-dev-jupyter", "name": "Jupyter" },
+        { "icon": "nf-dev-postgresql", "name": "PostgreSQL" }
       ],
       "socialLinks": [
         { "url": "https://github.com/VanDung-dev/", "icon": "nf-fa-github", "name": "GitHub" },
@@ -35,13 +37,15 @@
       ],
       "skills": [
         { "icon": "nf-dev-python", "name": "Python" },
-        { "icon": "nf-dev-linux", "name": "Linux" },
-        { "icon": "nf-md-security", "name": "Security" },
-        { "icon": "nf-dev-mongodb", "name": "MongoDB" },
-        { "icon": "nf-fa-bitcoin", "name": "Blockchain" },
+        { "icon": "nnf-dev-numpy", "name": "Numpy" },
+        { "icon": "nf-dev-pandas", "name": "Pandas" },
+        { "icon": "nf-dev-flask", "name": "Flask" },
+        { "icon": "nf-dev-fastapi", "name": "FastAPI" },
         { "icon": "nf-dev-git", "name": "Git" },
-        { "icon": "nf-fa-database", "name": "SQL/NoSQL" },
-        { "icon": "nf-fa-gamepad", "name": "PyGame" }
+        { "icon": "nf-fa-docker", "name": "Docker" },
+        { "icon": "nf-dev-linux", "name": "Linux" },
+        { "icon": "nf-dev-jupyter", "name": "Jupyter" },
+        { "icon": "nf-dev-postgresql", "name": "PostgreSQL" }
       ],
       "socialLinks": [
         { "url": "https://github.com/VanDung-dev/", "icon": "nf-fa-github", "name": "GitHub" },
@@ -149,7 +153,7 @@
     "vi": {
       "contactTitle": "Liên hệ",
       "email": "dungnguyen2661@gmail.com",
-      "phone": "+84 378 321 747",
+      "phone": "+84378321747",
       "address": "Thành phố Hồ Chí Minh, Việt Nam",
       "messageTitle": "Gửi tin nhắn",
       "messageDescription": "Bạn có thể gửi tin nhắn trực tiếp cho tôi thông qua các nền tảng dưới đây:",
@@ -165,7 +169,7 @@
     "en": {
       "contactTitle": "Contact",
       "email": "dungnguyen2661@gmail.com",
-      "phone": "+84 378 321 747",
+      "phone": "+84378321747",
       "address": "Ho Chi Minh City, Vietnam",
       "messageTitle": "Send a Message",
       "messageDescription": "You can send me a direct message through the platforms below:",
